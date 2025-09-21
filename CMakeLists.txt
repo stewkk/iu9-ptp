@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15..3.29)
 
 project(
-  iu9-db
+  ptp
   VERSION 0.0.1
   LANGUAGES CXX
 )
@@ -15,7 +15,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(src/stewkk/db)
+add_subdirectory(src/stewkk/ptp)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   include(CTest)
