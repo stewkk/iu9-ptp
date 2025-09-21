@@ -1,7 +1,7 @@
 add_executable(iu9-db main.cpp)
-target_compile_features(iu9-db PRIVATE cxx_std_20)
+target_compile_features(iu9-db PRIVATE cxx_std_23)
 set_target_properties(iu9-db PROPERTIES
-  CXX_STANDART 20
+  CXX_STANDART 23
   CXX_STANDART_REQUIRED YES
   CXX_EXTENSIONS YES
 )
