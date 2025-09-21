@@ -14,6 +14,7 @@ pkgs.mkShell.override {stdenv = pkgs.llvmPackages_21.stdenv;} {
     pkgs.pre-commit
     pkgs.plantuml
     pkgs.graphviz
+    pkgs.gdb
 
     # keep this line if you use bash
     pkgs.bashInteractive
