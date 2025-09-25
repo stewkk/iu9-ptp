@@ -1,5 +1,6 @@
 add_library(libptp
   logic/input.cpp
+  logic/monoid.cpp
 )
 add_library(stewkk::libptp ALIAS libptp)
 target_compile_features(libptp PRIVATE cxx_std_23)

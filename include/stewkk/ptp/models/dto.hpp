@@ -1,14 +1,14 @@
 #pragma once
 
+#include <map>
+#include <string>
 #include <vector>
-
-#include <stewkk/ptp/models/transformation.hpp>
 
 namespace stewkk::ptp {
 
-using WordDTO = Word;
-using TransformationDTO = Transformation;
-using WordToTransformationDTO = WordToTransformation;
+using WordDTO = std::string;
+using TransformationDTO = std::map<WordDTO, WordDTO>;
+using WordToTransformationDTO = std::map<WordDTO, TransformationDTO>;
 
 struct InputDTO {
   std::vector<WordDTO> words;

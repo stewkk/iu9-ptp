@@ -19,8 +19,9 @@ TEST(ProcessInputTest, ReturnsSortedWordSet) {
   auto got = ProcessInput(input);
 
   ASSERT_THAT(got.words, Eq(std::vector<WordDTO>{
-        "aa",
-        "bb",
+        "x",
+        "y",
+        "z",
       }));
 }
 
@@ -32,17 +33,21 @@ TEST(ProcessInputTest, ReturnsWordToTransformationMapping) {
   ASSERT_THAT(got.transformations, Eq(WordToTransformationDTO{
                                {"a",
                                 {
-                                    {"aa", "bb"},
-                                    {"bb", "bb"},
+                                    {"x", "x"},
+                                    {"y", "y"},
+                                    {"z", "x"},
                                 }},
                                {"b",
                                 {
-                                    {"aa", "aa"},
-                                    {"bb", "aa"},
+                                    {"x", "z"},
+                                    {"y", "y"},
+                                    {"z", "x"},
                                 }},
                                {"c",
                                 {
-                                    {"aa", "aa"},
+                                    {"x", "z"},
+                                    {"y", "z"},
+                                    {"z", "z"},
                                 }},
                            }));
 }

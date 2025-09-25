@@ -1,9 +1,14 @@
-2
-bb
-aa
-5
-aa a bb
-aa b aa
-aa c aa
-bb a bb
-bb b aa
+3
+x
+y
+z
+9
+x a x
+y a y
+z a x
+x b z
+y b y
+z b x
+x c z
+y c z
+z c z
