@@ -28,15 +28,15 @@ MonoidBuilder::MonoidBuilder(const LetterToTransformation& letter_transformation
 }
 
 void MonoidBuilder::AddComposition(size_t element_index, size_t letter_index) {
-  auto& [lhs_word, lhs_value] = monoid_elements_[element_index];
-  auto& [rhs_word, rhs_value] = monoid_elements_[letter_index];
+  auto& [lhs_label, lhs] = monoid_elements_[element_index];
+  auto& [rhs_label, rhs] = monoid_elements_[letter_index];
 
-  auto composition = Composition(lhs_value.transformation, rhs_value.transformation);
+  auto composition = Composition(lhs.transformation, rhs.transformation);
   auto [it, is_inserted] = monoid_transformations_.emplace(composition, monoid_elements_.size());
-  lhs_value.transitions.push_back(it->second);
+  lhs.transitions.push_back(it->second);
   if (is_inserted) {
     monoid_elements_.push_back(
-        std::make_pair(lhs_word + rhs_word, MonoidElement{std::move(composition), {}}));
+        std::make_pair(lhs_label + rhs_label, MonoidElement{std::move(composition), {}}));
   }
 }
 
