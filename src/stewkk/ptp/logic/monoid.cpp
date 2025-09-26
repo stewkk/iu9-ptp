@@ -18,13 +18,12 @@ Transformation Composition(const Transformation& lhs, const Transformation& rhs)
 MonoidBuilder::MonoidBuilder(const WordToTransformation& letter_transformations)
     : letter_transformations_(letter_transformations) {
 
-    for (const auto& [letter, transformation] : letter_transformations) {
-        monoid_transformations_.insert(transformation);
-    }
-
     monoid_elements_.reserve(letter_transformations.size());
     for (const auto& [letter, transformation] : letter_transformations) {
-        monoid_elements_.push_back(std::make_pair(letter, transformation));
+        auto [_, is_inserted] = monoid_transformations_.insert(transformation);
+        if (is_inserted) {
+            monoid_elements_.push_back(std::make_pair(letter, transformation));
+        }
     }
 }
 
@@ -48,11 +47,8 @@ WordToTransformation MonoidBuilder::Build() {
         }
     }
 
-    WordToTransformation result;
-    for (auto& [word, transformation] : monoid_elements_) {
-        result[std::move(word)] = std::move(transformation);
-    }
-    return result;
+    return WordToTransformation(std::make_move_iterator(monoid_elements_.begin()),
+                                std::make_move_iterator(monoid_elements_.end()));
 }
 
 }  // stewkk::ptp
