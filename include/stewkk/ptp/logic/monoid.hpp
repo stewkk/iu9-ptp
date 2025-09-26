@@ -1,24 +1,22 @@
 #pragma once
 
-#include <set>
 #include <vector>
 
-#include <stewkk/ptp/models/transformation.hpp>
+#include <stewkk/ptp/models/monoid.hpp>
 
 namespace stewkk::ptp {
 
 class MonoidBuilder {
 public:
-    explicit MonoidBuilder(const WordToTransformation& letter_transformations);
-    WordToTransformation Build();
+    explicit MonoidBuilder(const LetterToTransformation& letter_transformations);
+    TransformationMonoid Build();
 
 private:
-    void AddComposition(const std::pair<Word, Transformation>& lhs, const std::pair<Word, Transformation>& rhs);
+    void AddComposition(size_t element_index, size_t letter_index);
 
 private:
-    const WordToTransformation& letter_transformations_;
-    std::set<Transformation> monoid_transformations_;
-    std::vector<std::pair<Word, Transformation>> monoid_elements_;
+    std::vector<LabeledElement> monoid_elements_;
+    std::map<Transformation, size_t> monoid_transformations_;
 };
 
 }  // stewkk::ptp
