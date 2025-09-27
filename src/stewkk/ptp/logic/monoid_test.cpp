@@ -18,9 +18,9 @@ TEST(MonoidBuilderTest, FindsClosureByTransformationComposition) {
   auto got = builder.Build();
 
   ASSERT_THAT(got.size(), Eq(6));
-  ASSERT_THAT(got.at("ab").transformation, Eq(Transformation{2, 1, 2}));
-  ASSERT_THAT(got.at("bb").transformation, Eq(Transformation{0, 1, 2}));
-  ASSERT_THAT(got.at("ca").transformation, Eq(Transformation{0, 0, 0}));
+  ASSERT_THAT(got[3].transformation, Eq(Transformation{2, 1, 2}));
+  ASSERT_THAT(got[4].transformation, Eq(Transformation{0, 1, 2}));
+  ASSERT_THAT(got[5].transformation, Eq(Transformation{0, 0, 0}));
 }
 
 TEST(MonoidBuilderTest, EliminatesDuplicateTransformations) {
@@ -34,7 +34,7 @@ TEST(MonoidBuilderTest, EliminatesDuplicateTransformations) {
   auto got = builder.Build();
 
   ASSERT_THAT(got.size(), Eq(4));
-  ASSERT_THAT(got.contains("c"), IsFalse());
+  ASSERT_THAT(std::ranges::contains(got, "c", &MonoidElement::word), IsFalse());
 }
 
 TEST(MonoidBuilderTest, BuildsTransitions) {
@@ -47,7 +47,7 @@ TEST(MonoidBuilderTest, BuildsTransitions) {
 
   auto got = builder.Build();
 
-  ASSERT_THAT(got.at("a").transitions, Eq(std::vector<size_t>{0, 3, 2}));
+  ASSERT_THAT(got[0].transitions, Eq(std::vector<size_t>{0, 3, 2}));
 }
 
 }  // namespace stewkk::ptp
