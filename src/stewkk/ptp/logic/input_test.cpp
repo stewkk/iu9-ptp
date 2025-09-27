@@ -11,7 +11,7 @@ using ::testing::Eq;
 namespace stewkk::ptp {
 
 const static std::string kProjectDir = std::getenv("PWD");
-const static std::string kBasicDataPath = std::format("{}/test/input/basic.txt", kProjectDir);
+const static std::string kBasicDataPath = std::format("{}/test/input_basic.txt", kProjectDir);
 
 TEST(ProcessInputTest, ReturnsSortedWordSet) {
   std::ifstream input{kBasicDataPath};

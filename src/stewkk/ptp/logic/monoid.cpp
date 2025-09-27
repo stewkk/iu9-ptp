@@ -22,21 +22,19 @@ MonoidBuilder::MonoidBuilder(const LetterToTransformation& letter_transformation
       if (!is_inserted) {
         continue;
       }
-      monoid_elements_.push_back(
-          std::make_pair(std::string{letter}, MonoidElement{transformation, {}}));
+      monoid_elements_.push_back(MonoidElement{std::string{letter}, transformation, {}});
     }
 }
 
 void MonoidBuilder::AddComposition(size_t element_index, size_t letter_index) {
-  auto& [lhs_label, lhs] = monoid_elements_[element_index];
-  auto& [rhs_label, rhs] = monoid_elements_[letter_index];
+  auto& lhs = monoid_elements_[element_index];
+  auto& rhs = monoid_elements_[letter_index];
 
   auto composition = Composition(lhs.transformation, rhs.transformation);
   auto [it, is_inserted] = monoid_transformations_.emplace(composition, monoid_elements_.size());
   lhs.transitions.push_back(it->second);
   if (is_inserted) {
-    monoid_elements_.push_back(
-        std::make_pair(lhs_label + rhs_label, MonoidElement{std::move(composition), {}}));
+    monoid_elements_.push_back(MonoidElement{lhs.word + rhs.word, std::move(composition), {}});
   }
 }
 
@@ -48,8 +46,7 @@ TransformationMonoid MonoidBuilder::Build() {
         }
     }
 
-    return {TransformationMonoid(std::make_move_iterator(monoid_elements_.begin()),
-                                 std::make_move_iterator(monoid_elements_.end()))};
+    return std::move(monoid_elements_);
 }
 
 }  // stewkk::ptp
