@@ -9,11 +9,12 @@ namespace stewkk::ptp {
 using Word = std::string;
 using Transformation = std::vector<size_t>;
 using LetterToTransformation = std::map<char, Transformation>;
+using ElementIndex = size_t;
 
 struct MonoidElement {
     std::string word;
     Transformation transformation;
-    std::vector<size_t> transitions;
+    std::vector<ElementIndex> transitions;
 };
 
 using TransformationMonoid = std::vector<MonoidElement>;

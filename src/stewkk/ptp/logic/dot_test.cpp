@@ -1,9 +1,9 @@
 #include <gmock/gmock.h>
 
 #include <fstream>
-#include <ranges>
 
 #include <stewkk/ptp/logic/monoid.hpp>
+#include <stewkk/ptp/logic/dot.hpp>
 
 using ::testing::Eq;
 
@@ -11,21 +11,6 @@ namespace stewkk::ptp {
 
 const static std::string kProjectDir = std::getenv("PWD");
 const static std::string kSimpleOutputPath = std::format("{}/test/simple.dot", kProjectDir);
-
-void VisualizeDot(std::ostream& out, const TransformationMonoid& monoid) {
-  out << "digraph G {\n";
-  for (const auto& element : monoid) {
-    out << std::format("\"{}\"\n", element.word);
-  }
-  for (const auto& start : monoid) {
-    for (auto [letter_index, transition_index] : std::ranges::views::enumerate(start.transitions)) {
-      const auto& end = monoid[transition_index];
-      const auto& letter = monoid[letter_index];
-      out << std::format("\"{}\" -> \"{}\" [label=\"{}\"]\n", start.word, end.word, letter.word);
-    }
-  }
-  out << "}\n";
-}
 
 TEST(MonoidVisualizationTest, Simple) {
   LetterToTransformation letter_transformations{

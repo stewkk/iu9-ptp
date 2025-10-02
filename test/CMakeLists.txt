@@ -6,6 +6,7 @@ target_sources(unittests PRIVATE
   ${PROJECT_SOURCE_DIR}/src/stewkk/ptp/logic/input_test.cpp
   ${PROJECT_SOURCE_DIR}/src/stewkk/ptp/logic/monoid_test.cpp
   ${PROJECT_SOURCE_DIR}/src/stewkk/ptp/logic/dot_test.cpp
+  ${PROJECT_SOURCE_DIR}/src/stewkk/ptp/logic/strong_connectivity_test.cpp
 )
 target_compile_features(unittests PRIVATE cxx_std_23)
 set_target_properties(unittests PROPERTIES

@@ -8,7 +8,7 @@ build:
 	cmake --build build -- -j 6
 
 dot:
-	dot -T png -O /tmp/out.dot
-	loupe /tmp/out.dot.png
+	dot -T png -O /tmp/out2.dot
+	loupe /tmp/out2.dot.png
 
 .PHONY: gdb test build dot
