@@ -1,6 +1,9 @@
 #include <gmock/gmock.h>
 
+#include <fstream>
+
 #include <stewkk/ptp/logic/monoid.hpp>
+#include <stewkk/ptp/logic/dot.hpp>
 
 using ::testing::Eq;
 using ::testing::IsFalse;
@@ -48,6 +51,29 @@ TEST(MonoidBuilderTest, BuildsTransitions) {
   auto got = builder.Build();
 
   ASSERT_THAT(got[0].transitions, Eq(std::vector<size_t>{0, 3, 2}));
+}
+
+TEST(MonoidBuilderTest, LeftCayleyGraph) {
+  LetterToTransformation letter_transformations{
+      {'a', {0, 1, 0}},
+      {'b', {2, 1, 0}},
+      {'c', {2, 2, 2}},
+  };
+  MonoidBuilder left_builder(letter_transformations, LeftComposition, LeftWordComposition);
+  MonoidBuilder right_builder(letter_transformations);
+
+  auto left = left_builder.Build();
+  std::ofstream tmp{"/tmp/out4.dot"};
+  VisualizeDot(tmp, left);
+  auto right = right_builder.Build();
+
+  std::ranges::sort(left, std::less{}, &MonoidElement::word);
+  std::ranges::sort(right, std::less{}, &MonoidElement::word);
+
+  for (size_t i = 0; i < right.size(); i++) {
+    ASSERT_THAT(left[i].word, Eq(right[i].word));
+    ASSERT_THAT(left[i].transformation, Eq(right[i].transformation));
+  }
 }
 
 }  // namespace stewkk::ptp

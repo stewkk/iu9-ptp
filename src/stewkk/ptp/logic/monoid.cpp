@@ -2,9 +2,7 @@
 
 namespace stewkk::ptp {
 
-namespace {
-
-Transformation Composition(const Transformation& lhs, const Transformation& rhs) {
+Transformation RightComposition(const Transformation& lhs, const Transformation& rhs) {
   Transformation result;
   result.reserve(lhs.size());
   for (auto lhs_mapping : lhs) {
@@ -13,28 +11,44 @@ Transformation Composition(const Transformation& lhs, const Transformation& rhs)
   return result;
 }
 
-} // namespace
+Transformation LeftComposition(const Transformation& lhs, const Transformation& rhs) {
+  return RightComposition(rhs, lhs);
+}
 
-MonoidBuilder::MonoidBuilder(const LetterToTransformation& letter_transformations) {
-    monoid_elements_.reserve(letter_transformations.size());
-    for (const auto& [letter, transformation] : letter_transformations) {
-      auto [_, is_inserted] = monoid_transformations_.emplace(transformation, monoid_elements_.size());
-      if (!is_inserted) {
-        continue;
-      }
-      monoid_elements_.push_back(MonoidElement{std::string{letter}, transformation, {}});
+std::string RightWordComposition(const MonoidElement& lhs, const MonoidElement& rhs) {
+  return lhs.word + rhs.word;
+}
+
+std::string LeftWordComposition(const MonoidElement& lhs, const MonoidElement& rhs) {
+  return RightWordComposition(rhs, lhs);
+}
+
+MonoidBuilder::MonoidBuilder(const LetterToTransformation& letter_transformations,
+                             CompositionStrategy composition_strategy,
+                             WordCompositionStrategy word_composition_strategy)
+    : composition_strategy_(std::move(composition_strategy)),
+      word_composition_strategy_(std::move(word_composition_strategy)) {
+  monoid_elements_.reserve(letter_transformations.size());
+  for (const auto& [letter, transformation] : letter_transformations) {
+    auto [_, is_inserted]
+        = monoid_transformations_.emplace(transformation, monoid_elements_.size());
+    if (!is_inserted) {
+      continue;
     }
+    monoid_elements_.push_back(MonoidElement{std::string{letter}, transformation, {}});
+  }
 }
 
 void MonoidBuilder::AddComposition(size_t element_index, size_t letter_index) {
   auto& lhs = monoid_elements_[element_index];
   auto& rhs = monoid_elements_[letter_index];
 
-  auto composition = Composition(lhs.transformation, rhs.transformation);
+  auto composition = composition_strategy_(lhs.transformation, rhs.transformation);
   auto [it, is_inserted] = monoid_transformations_.emplace(composition, monoid_elements_.size());
   lhs.transitions.push_back(it->second);
   if (is_inserted) {
-    monoid_elements_.push_back(MonoidElement{lhs.word + rhs.word, std::move(composition), {}});
+    monoid_elements_.push_back(
+        MonoidElement{word_composition_strategy_(lhs, rhs), std::move(composition), {}});
   }
 }
 
