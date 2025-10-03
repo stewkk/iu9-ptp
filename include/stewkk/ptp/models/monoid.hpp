@@ -15,6 +15,8 @@ struct MonoidElement {
     std::string word;
     Transformation transformation;
     std::vector<ElementIndex> transitions;
+
+    bool operator<=>(const MonoidElement& other) const = default;
 };
 
 using TransformationMonoid = std::vector<MonoidElement>;
