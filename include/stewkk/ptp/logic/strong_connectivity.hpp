@@ -54,4 +54,6 @@ private:
     const TransformationMonoid& monoid_;
 };
 
+std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid& monoid, const std::vector<std::vector<ElementIndex>>& indices);
+
 }  // namespace stewkk::ptp

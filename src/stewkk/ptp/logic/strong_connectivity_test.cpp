@@ -19,7 +19,8 @@ TEST(StrongConnectivityTest, FindsSCCs) {
 
   auto got = SCCFinder(monoid).Find();
 
-  ASSERT_THAT(got, Eq(StronglyConnectedComponents{{ 1, 4 }, { 0, 3 }, { 2, 5 }}));
+  ASSERT_THAT(IndicesToWords(monoid, got),
+              Eq(std::vector<std::vector<std::string>>{{"b", "bb"}, {"a", "ab"}, {"c", "ca"}}));
 }
 
 TEST(StrongConnectivityTest, FindRightIdeals) {
@@ -33,8 +34,9 @@ TEST(StrongConnectivityTest, FindRightIdeals) {
 
   auto right_ideals = RightIdealsFinder(monoid, scc).FindRightIdeals();
 
-  ASSERT_THAT(right_ideals,
-              Eq(std::vector<std::vector<ElementIndex>>{{ 0, 1, 2, 3, 4, 5 }, { 0, 2, 3, 5 }, { 2, 5 }}));
+  ASSERT_THAT(IndicesToWords(monoid, right_ideals),
+              Eq(std::vector<std::vector<std::string>>{
+                  {"a", "b", "c", "ab", "bb", "ca"}, {"a", "c", "ab", "ca"}, {"c", "ca"}}));
 }
 
 TEST(StrongConnectivityTest, FindRightIdealsComplex) {
@@ -49,19 +51,37 @@ TEST(StrongConnectivityTest, FindRightIdealsComplex) {
 
   auto right_ideals = RightIdealsFinder(monoid, scc).FindRightIdeals();
 
-  ASSERT_THAT(scc, Eq(StronglyConnectedComponents{{1, 9, 4},
-                                                  {8, 22, 18, 14, 23, 19},
-                                                  {3, 17, 12, 7, 21, 13},
-                                                  {0, 10, 5, 2, 15, 6},
-                                                  {11, 20, 16}}));
-  ASSERT_THAT(
-      right_ideals,
-      Eq(std::vector<std::vector<ElementIndex>>{
-          {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23},
-          {8, 11, 14, 16, 18, 19, 20, 22, 23},
-          {3, 7, 11, 12, 13, 16, 17, 20, 21},
-          {0, 2, 5, 6, 10, 11, 15, 16, 20},
-          {11, 16, 20}}));
+  ASSERT_THAT(IndicesToWords(monoid, scc),
+              Eq(std::vector<std::vector<std::string>>{
+                  {"c", "ccc", "cc"},
+                  {"cca", "ccacac", "ccaca", "ccac", "ccacacc", "ccacc"},
+                  {"ca", "cacac", "caca", "cac", "cacacc", "cacc"},
+                  {"a", "acac", "aca", "ac", "acacc", "acc"},
+                  {"acca", "accacc", "accac"}}));
+  ASSERT_THAT(IndicesToWords(monoid, right_ideals),
+              Eq(std::vector<std::vector<std::string>>{
+                  {"a",     "c",     "ac",    "ca",    "cc",     "aca",    "acc",    "cac",
+                   "cca",   "ccc",   "acac",  "acca",  "caca",   "cacc",   "ccac",   "acacc",
+                   "accac", "cacac", "ccaca", "ccacc", "accacc", "cacacc", "ccacac", "ccacacc"},
+                  {"cca", "acca", "ccac", "accac", "ccaca", "ccacc", "accacc", "ccacac", "ccacacc"},
+                  {"ca", "cac", "acca", "caca", "cacc", "accac", "cacac", "accacc", "cacacc"},
+                  {"a", "ac", "aca", "acc", "acac", "acca", "acacc", "accac", "accacc"},
+                  {"acca", "accac", "accacc"}}));
+}
+
+TEST(StrongConnectivityTest, FindLeftIdeals) {
+  LetterToTransformation letter_transformations{
+      {'a', {0, 1, 0}},
+      {'b', {2, 1, 0}},
+      {'c', {2, 2, 2}},
+  };
+  auto monoid = MonoidBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
+  auto scc = SCCFinder(monoid).Find();
+
+  auto left_ideals = RightIdealsFinder(monoid, scc).FindRightIdeals();
+
+  ASSERT_THAT(IndicesToWords(monoid, left_ideals),
+              Eq(std::vector<std::vector<std::string>>{}));
 }
 
 }  // namespace stewkk::ptp

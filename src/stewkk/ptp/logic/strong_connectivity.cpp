@@ -141,4 +141,14 @@ StronglyConnectedComponents SCCFinder::FindSCCs(const TransposedGraph& transpose
   return result;
 }
 
+std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid& monoid, const std::vector<std::vector<ElementIndex>>& indices) {
+  return indices | std::ranges::views::transform([&monoid](const auto& vec) {
+               return vec | std::ranges::views::transform([&monoid](const auto& index) {
+                        return monoid[index].word;
+                      })
+                      | std::ranges::to<std::vector>();
+             })
+             | std::ranges::to<std::vector>();
+}
+
 }  // namespace stewkk::ptp
