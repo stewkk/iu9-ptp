@@ -19,6 +19,6 @@ struct MonoidElement {
     bool operator<=>(const MonoidElement& other) const = default;
 };
 
-using TransformationMonoid = std::vector<MonoidElement>;
+using CayleyGraph = std::vector<MonoidElement>;
 
 } // stewkk::ptp

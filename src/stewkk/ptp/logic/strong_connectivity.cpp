@@ -3,13 +3,14 @@
 #include <queue>
 #include <algorithm>
 #include <ranges>
-#include <iostream>
+#include <set>
+#include <unordered_set>
 
 namespace stewkk::ptp {
 
 namespace {
 
-TransposedGraph GetTransposedGraph(const TransformationMonoid& monoid) {
+TransposedGraph GetTransposedGraph(const CayleyGraph& monoid) {
   TransposedGraph result(monoid.size());
 
   for (auto [vertex_index, vertex] : std::ranges::views::enumerate(monoid)) {
@@ -39,7 +40,7 @@ CondensationGraph ToCondensationGraph(std::vector<int32_t> element_to_component,
 
 }  // namespace
 
-IdealsBuilder::IdealsBuilder(TransformationMonoid monoid,
+IdealsBuilder::IdealsBuilder(CayleyGraph monoid,
                                      CondensationGraph graph)
     : monoid_(std::move(monoid)), graph_(std::move(graph)), scc_(ToSCCs(graph_)) {}
 
@@ -51,12 +52,6 @@ std::vector<std::vector<ElementIndex>> IdealsBuilder::Build() {
 }
 
 void IdealsBuilder::Generate(std::vector<size_t>& prefix, std::vector<std::vector<ElementIndex>>& ideals) {
-  // std::cerr << "========\n";
-  // for (auto el : prefix) {
-  //   std::cerr << el << ' ';
-  // }
-  // std::cerr << std::endl;
-
   auto ideal_components = GetDescentants(prefix);
   if (!ideal_components.empty()) {
     auto ideal_vertices
@@ -64,11 +59,6 @@ void IdealsBuilder::Generate(std::vector<size_t>& prefix, std::vector<std::vecto
           | std::ranges::views::transform([this](const auto& component) { return scc_[component]; })
           | std::ranges::views::join | std::ranges::to<std::vector>();
     std::ranges::sort(ideal_vertices);
-    // for (auto el : ideal_vertices) {
-    //   std::cerr << monoid_[el].word << ' ';
-    // }
-    // std::cerr << std::endl;
-    // std::cerr << "========\n";
     ideals.push_back(std::move(ideal_vertices));
   }
 
@@ -123,7 +113,7 @@ std::vector<size_t> IdealsBuilder::GetDescentants(std::vector<size_t> vertices) 
   return result;
 }
 
-Topsorter::Topsorter(const TransformationMonoid& monoid) : monoid_(monoid) {}
+Topsorter::Topsorter(const CayleyGraph& monoid) : monoid_(monoid) {}
 
 std::vector<ElementIndex> Topsorter::Topsort() {
     used_.assign(monoid_.size(), false);
@@ -151,7 +141,7 @@ void Topsorter::Topsort(ElementIndex index) {
     topsort_.push_back(index);
 }
 
-CondensationGraphBuilder::CondensationGraphBuilder(const TransformationMonoid& monoid) : monoid_(monoid) {}
+CondensationGraphBuilder::CondensationGraphBuilder(const CayleyGraph& monoid) : monoid_(monoid) {}
 
 CondensationGraph CondensationGraphBuilder::Build() {
     auto topsort = Topsorter(monoid_).Topsort();
@@ -201,14 +191,18 @@ CondensationGraph CondensationGraphBuilder::Build(const TransposedGraph& transpo
   return ToCondensationGraph(std::move(element_to_component_), std::move(transitions));
 }
 
-std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid& monoid, const std::vector<std::vector<ElementIndex>>& indices) {
+std::vector<std::vector<std::string>> IndicesToWords(const CayleyGraph& monoid, const std::vector<std::vector<ElementIndex>>& indices) {
   return indices | std::ranges::views::transform([&monoid](const auto& vec) {
-               return vec | std::ranges::views::transform([&monoid](const auto& index) {
-                        return monoid[index].word;
-                      })
-                      | std::ranges::to<std::vector>();
+               return IndicesToWords(monoid, vec);
              })
              | std::ranges::to<std::vector>();
+}
+
+std::vector<std::string> IndicesToWords(const CayleyGraph& monoid, const std::vector<ElementIndex>& indices) {
+  return indices | std::ranges::views::transform([&monoid](const auto& index) {
+           return monoid[index].word;
+         })
+         | std::ranges::to<std::vector>();
 }
 
 StronglyConnectedComponents ToSCCs(const CondensationGraph& graph) {
@@ -217,6 +211,24 @@ StronglyConnectedComponents ToSCCs(const CondensationGraph& graph) {
   for (auto [el, component] : graph.element_to_component | std::ranges::views::enumerate) {
     result[component].push_back(el);
   }
+  return result;
+}
+
+std::vector<std::vector<std::string>> BuildIdeals(
+    const std::vector<std::vector<std::string>>& left,
+    const std::vector<std::vector<std::string>>& right) {
+  std::vector<std::vector<std::string>> result;
+  auto set = left | std::ranges::views::transform([](const auto& ideal) {
+    auto tmp = ideal;
+    std::ranges::sort(tmp);
+    return tmp;
+  }) | std::ranges::to<std::set>();
+
+  std::copy_if(right.begin(), right.end(), std::back_inserter(result), [&set](const auto& el) {
+    auto tmp = el;
+    std::ranges::sort(tmp);
+    return set.contains(tmp);
+  });
   return result;
 }
 

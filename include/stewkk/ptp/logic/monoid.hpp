@@ -15,18 +15,18 @@ Transformation LeftComposition(const Transformation& lhs, const Transformation& 
 std::string RightWordComposition(const MonoidElement& lhs, const MonoidElement& rhs);
 std::string LeftWordComposition(const MonoidElement& lhs, const MonoidElement& rhs);
 
-class MonoidBuilder {
+class CayleyGraphBuilder {
 public:
-  MonoidBuilder(const LetterToTransformation& letter_transformations,
+  CayleyGraphBuilder(const LetterToTransformation& letter_transformations,
                          CompositionStrategy composition_strategy = RightComposition,
                          WordCompositionStrategy word_composition_strategy = RightWordComposition);
-  TransformationMonoid Build();
+  CayleyGraph Build();
 
 private:
     void AddComposition(size_t element_index, size_t letter_index);
 
 private:
-    TransformationMonoid monoid_elements_;
+    CayleyGraph monoid_elements_;
     std::map<Transformation, size_t> monoid_transformations_;
     CompositionStrategy composition_strategy_;
     WordCompositionStrategy word_composition_strategy_;

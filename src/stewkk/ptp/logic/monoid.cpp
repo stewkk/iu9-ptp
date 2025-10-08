@@ -23,7 +23,7 @@ std::string LeftWordComposition(const MonoidElement& lhs, const MonoidElement& r
   return RightWordComposition(rhs, lhs);
 }
 
-MonoidBuilder::MonoidBuilder(const LetterToTransformation& letter_transformations,
+CayleyGraphBuilder::CayleyGraphBuilder(const LetterToTransformation& letter_transformations,
                              CompositionStrategy composition_strategy,
                              WordCompositionStrategy word_composition_strategy)
     : composition_strategy_(std::move(composition_strategy)),
@@ -39,7 +39,7 @@ MonoidBuilder::MonoidBuilder(const LetterToTransformation& letter_transformation
   }
 }
 
-void MonoidBuilder::AddComposition(size_t element_index, size_t letter_index) {
+void CayleyGraphBuilder::AddComposition(size_t element_index, size_t letter_index) {
   auto& lhs = monoid_elements_[element_index];
   auto& rhs = monoid_elements_[letter_index];
 
@@ -52,7 +52,7 @@ void MonoidBuilder::AddComposition(size_t element_index, size_t letter_index) {
   }
 }
 
-TransformationMonoid MonoidBuilder::Build() {
+CayleyGraph CayleyGraphBuilder::Build() {
     auto letters_count = monoid_elements_.size();
     for (size_t i = 0; i < monoid_elements_.size(); i++) {
         for (int j = 0; j < letters_count; j++) {

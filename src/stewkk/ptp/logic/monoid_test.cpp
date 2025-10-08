@@ -16,7 +16,7 @@ TEST(MonoidBuilderTest, FindsClosureByTransformationComposition) {
       {'b', {2, 1, 0}},
       {'c', {2, 2, 2}},
   };
-  MonoidBuilder builder(std::move(letter_transformations));
+  CayleyGraphBuilder builder(std::move(letter_transformations));
 
   auto got = builder.Build();
 
@@ -32,7 +32,7 @@ TEST(MonoidBuilderTest, EliminatesDuplicateTransformations) {
       {'b', {2, 1, 0}},
       {'c', {2, 1, 0}},
   };
-  MonoidBuilder builder(letter_transformations);
+  CayleyGraphBuilder builder(letter_transformations);
 
   auto got = builder.Build();
 
@@ -46,7 +46,7 @@ TEST(MonoidBuilderTest, BuildsTransitions) {
       {'b', {2, 1, 0}},
       {'c', {2, 2, 2}},
   };
-  MonoidBuilder builder(letter_transformations);
+  CayleyGraphBuilder builder(letter_transformations);
 
   auto got = builder.Build();
 
@@ -59,8 +59,8 @@ TEST(MonoidBuilderTest, LeftCayleyGraph) {
       {'b', {2, 1, 0}},
       {'c', {2, 2, 2}},
   };
-  MonoidBuilder left_builder(letter_transformations, LeftComposition, LeftWordComposition);
-  MonoidBuilder right_builder(letter_transformations);
+  CayleyGraphBuilder left_builder(letter_transformations, LeftComposition, LeftWordComposition);
+  CayleyGraphBuilder right_builder(letter_transformations);
 
   auto left = left_builder.Build();
   std::ofstream tmp{"/tmp/out4.dot"};

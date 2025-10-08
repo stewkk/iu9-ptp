@@ -18,7 +18,7 @@ TEST(MonoidVisualizationTest, Simple) {
       {'b', {2, 1, 0}},
       {'c', {2, 2, 2}},
   };
-  auto monoid = MonoidBuilder(letter_transformations).Build();
+  auto monoid = CayleyGraphBuilder(letter_transformations).Build();
   std::ifstream f{kSimpleOutputPath};
   std::string expected((std::istreambuf_iterator<char>(f)),
                        std::istreambuf_iterator<char>());

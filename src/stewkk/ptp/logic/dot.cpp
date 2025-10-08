@@ -5,7 +5,7 @@
 
 namespace stewkk::ptp {
 
-void VisualizeDot(std::ostream& out, const TransformationMonoid& monoid) {
+void VisualizeDot(std::ostream& out, const CayleyGraph& monoid) {
   out << "digraph G {\n";
   for (const auto& element : monoid) {
     out << std::format("\"{}\"\n", element.word);

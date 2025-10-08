@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <unordered_set>
 
 #include <stewkk/ptp/models/monoid.hpp>
 #include <stewkk/ptp/models/strong_connectivity.hpp>
@@ -9,9 +8,13 @@
 
 namespace stewkk::ptp {
 
+std::vector<std::vector<std::string>> BuildIdeals(
+    const std::vector<std::vector<std::string>>& left,
+    const std::vector<std::vector<std::string>>& right);
+
 class IdealsBuilder {
 public:
-    IdealsBuilder(TransformationMonoid monoid, CondensationGraph graph);
+    IdealsBuilder(CayleyGraph monoid, CondensationGraph graph);
     std::vector<std::vector<ElementIndex>> Build();
 
 private:
@@ -20,14 +23,14 @@ private:
     void Generate(std::vector<size_t>& prefix, std::vector<std::vector<ElementIndex>>& ideals);
 
 private:
-    TransformationMonoid monoid_;
+    CayleyGraph monoid_;
     CondensationGraph graph_;
     StronglyConnectedComponents scc_;
 };
 
 class Topsorter {
 public:
-    explicit Topsorter(const TransformationMonoid& monoid);
+    explicit Topsorter(const CayleyGraph& monoid);
     std::vector<ElementIndex> Topsort();
 
 private:
@@ -36,14 +39,14 @@ private:
 private:
     std::vector<char> used_;
     std::vector<ElementIndex> topsort_;
-    const TransformationMonoid& monoid_;
+    const CayleyGraph& monoid_;
 };
 
 using TransposedGraph = std::vector<std::vector<std::vector<ElementIndex>>>;
 
 class CondensationGraphBuilder {
 public:
-    explicit CondensationGraphBuilder(const TransformationMonoid& monoid);
+    explicit CondensationGraphBuilder(const CayleyGraph& monoid);
     CondensationGraph Build();
 
 private:
@@ -53,10 +56,11 @@ private:
 
   private:
     std::vector<int32_t> element_to_component_;
-    const TransformationMonoid& monoid_;
+    const CayleyGraph& monoid_;
 };
 
-std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid& monoid, const std::vector<std::vector<ElementIndex>>& indices);
+std::vector<std::vector<std::string>> IndicesToWords(const CayleyGraph& monoid, const std::vector<std::vector<ElementIndex>>& indices);
+std::vector<std::string> IndicesToWords(const CayleyGraph& monoid, const std::vector<ElementIndex>& indices);
 
 StronglyConnectedComponents ToSCCs(const CondensationGraph& graph);
 

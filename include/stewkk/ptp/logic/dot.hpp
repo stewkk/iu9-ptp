@@ -6,6 +6,6 @@
 
 namespace stewkk::ptp {
 
-void VisualizeDot(std::ostream& out, const TransformationMonoid& monoid);
+void VisualizeDot(std::ostream& out, const CayleyGraph& monoid);
 
 }  // stewkk::ptp
