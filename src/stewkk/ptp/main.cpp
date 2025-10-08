@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ranges>
+#include <fstream>
 
 #include <stewkk/ptp/logic/input.hpp>
 #include <stewkk/ptp/logic/dot.hpp>
@@ -21,6 +22,11 @@ int32_t main() {
   auto left_graph = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
   auto right_graph = CayleyGraphBuilder(letter_transformations).Build();
 
+  std::ofstream left_f{"build/left.dot"};
+  std::ofstream right_f{"build/right.dot"};
+  VisualizeDot(left_f, left_graph);
+  VisualizeDot(right_f, right_graph);
+
   auto left_condensation_graph = CondensationGraphBuilder(left_graph).Build();
   auto right_condensation_graph = CondensationGraphBuilder(right_graph).Build();
 
@@ -34,7 +40,7 @@ int32_t main() {
 
   std::cout << "Left ideals:\n" << FormatIdeal(left_ideals_words) << '\n';
   std::cout << "Right ideals:\n" << FormatIdeal(right_ideals_words) << '\n';
-  std::cout << "Ideals:\n" << FormatIdeal(right_ideals_words) << '\n';
+  std::cout << "Ideals:\n" << FormatIdeal(ideals) << '\n';
 
   return 0;
 }
