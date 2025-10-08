@@ -1,5 +1,7 @@
 #include <stewkk/ptp/logic/monoid.hpp>
 
+#include <ranges>
+
 namespace stewkk::ptp {
 
 Transformation RightComposition(const Transformation& lhs, const Transformation& rhs) {
@@ -61,6 +63,21 @@ CayleyGraph CayleyGraphBuilder::Build() {
     }
 
     return std::move(monoid_elements_);
+}
+
+LetterToTransformation ToLetterTransformations(InputDTO input) {
+  std::unordered_map<char, size_t> char_to_index;
+  for (const auto& [i, el] : input.words | std::ranges::views::enumerate) {
+    char_to_index[el[0]] = i;
+  }
+  LetterToTransformation transformations;
+  for (auto [key, transformation] : input.transformations) {
+    auto letter_transformation = transformation | std::ranges::views::transform([&](const auto& el) {
+      return char_to_index[el.second[0]];
+    }) | std::ranges::to<std::vector>();
+    transformations[key[0]] = std::move(letter_transformation);
+  }
+  return transformations;
 }
 
 }  // stewkk::ptp

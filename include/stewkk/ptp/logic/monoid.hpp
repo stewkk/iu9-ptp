@@ -4,8 +4,11 @@
 #include <functional>
 
 #include <stewkk/ptp/models/monoid.hpp>
+#include <stewkk/ptp/models/dto.hpp>
 
 namespace stewkk::ptp {
+
+LetterToTransformation ToLetterTransformations(InputDTO input);
 
 using CompositionStrategy = std::function<Transformation(const Transformation& lhs, const Transformation& rhs)>;
 using WordCompositionStrategy = std::function<std::string(const MonoidElement& lhs, const MonoidElement& rhs)>;
