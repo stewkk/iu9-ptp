@@ -1,7 +1,9 @@
 #include <stewkk/ptp/logic/strong_connectivity.hpp>
 
+#include <queue>
 #include <algorithm>
 #include <ranges>
+#include <iostream>
 
 namespace stewkk::ptp {
 
@@ -37,44 +39,88 @@ CondensationGraph ToCondensationGraph(std::vector<int32_t> element_to_component,
 
 }  // namespace
 
-RightIdealsFinder::RightIdealsFinder(const TransformationMonoid& monoid,
+IdealsBuilder::IdealsBuilder(TransformationMonoid monoid,
                                      CondensationGraph graph)
-    : monoid_(monoid), element_to_component_(graph.element_to_component), scc_(ToSCCs(std::move(graph))) {}
+    : monoid_(std::move(monoid)), graph_(std::move(graph)), scc_(ToSCCs(graph_)) {}
 
-std::vector<std::vector<ElementIndex>> RightIdealsFinder::FindRightIdeals() {
-  component_to_ideal_.assign(scc_.size(), {});
-  for (size_t i = 0; i < scc_.size(); i++) {
-    if (component_to_ideal_[i].empty()) {
-      FindRightIdeals(i);
-    }
-  }
-
-  std::vector<std::vector<ElementIndex>> result;
-  result.reserve(component_to_ideal_.size());
-  for (size_t i = 0; i < component_to_ideal_.size(); i++) {
-    result.push_back(std::vector<ElementIndex>{component_to_ideal_[i].begin(), component_to_ideal_[i].end()});
-  }
-  return result;
+std::vector<std::vector<ElementIndex>> IdealsBuilder::Build() {
+  std::vector<std::vector<ElementIndex>> ideals;
+  std::vector<size_t> prefix;
+  Generate(prefix, ideals);
+  return ideals;
 }
 
-void RightIdealsFinder::FindRightIdeals(size_t current_component_index) {
-  const auto& current_component = scc_[current_component_index];
-  std::set<ElementIndex> right_ideal{current_component.begin(), current_component.end()};
-  for (auto start : current_component) {
-    for (auto end : monoid_[start].transitions) {
-      auto start_component = element_to_component_[start];
-      auto end_component = element_to_component_[end];
-      if (start_component == end_component) {
+void IdealsBuilder::Generate(std::vector<size_t>& prefix, std::vector<std::vector<ElementIndex>>& ideals) {
+  // std::cerr << "========\n";
+  // for (auto el : prefix) {
+  //   std::cerr << el << ' ';
+  // }
+  // std::cerr << std::endl;
+
+  auto ideal_components = GetDescentants(prefix);
+  if (!ideal_components.empty()) {
+    auto ideal_vertices
+        = ideal_components
+          | std::ranges::views::transform([this](const auto& component) { return scc_[component]; })
+          | std::ranges::views::join | std::ranges::to<std::vector>();
+    std::ranges::sort(ideal_vertices);
+    // for (auto el : ideal_vertices) {
+    //   std::cerr << monoid_[el].word << ' ';
+    // }
+    // std::cerr << std::endl;
+    // std::cerr << "========\n";
+    ideals.push_back(std::move(ideal_vertices));
+  }
+
+  if (prefix.size() == graph_.transitions.size()) {
+    return;
+  }
+  size_t from = 0;
+  if (prefix.size() > 0) {
+    from = prefix.back()+1;
+  }
+  prefix.push_back(0);
+  for (size_t i = from; i < graph_.transitions.size(); i++) {
+    prefix.back() = i;
+    Generate(prefix, ideals);
+  }
+  prefix.pop_back();
+}
+
+std::vector<size_t> IdealsBuilder::GetDescentants(std::vector<size_t> vertices) {
+  std::queue<size_t> q(vertices.begin(), vertices.end());
+  enum class Color {
+    kSource,
+    kUsed,
+    kNotUsed,
+  };
+  std::vector<Color> used(graph_.transitions.size(), Color::kNotUsed);
+  for (auto source : vertices) {
+    used[source] = Color::kSource;
+  }
+  std::vector<size_t> result;
+  result.reserve(graph_.transitions.size());
+  while (!q.empty()) {
+    auto cur = q.front();
+    q.pop();
+    if (used[cur] == Color::kUsed) {
+      continue;
+    }
+    if (used[cur] != Color::kSource) {
+      used[cur] = Color::kUsed;
+    }
+    result.push_back(cur);
+    for (auto next : graph_.transitions[cur]) {
+      if (used[next] == Color::kUsed) {
         continue;
       }
-      if (component_to_ideal_[end_component].empty()) {
-        FindRightIdeals(end_component);
+      if (used[next] == Color::kSource) {
+        return {};
       }
-      const auto& child = component_to_ideal_[end_component];
-      std::copy(child.begin(), child.end(), std::inserter(right_ideal, right_ideal.begin()));
+      q.push(next);
     }
   }
-  component_to_ideal_[current_component_index] = std::move(right_ideal);
+  return result;
 }
 
 Topsorter::Topsorter(const TransformationMonoid& monoid) : monoid_(monoid) {}
@@ -122,7 +168,6 @@ void CondensationGraphBuilder::GetComponent(const TransposedGraph& transposed_mo
   for (const auto& next_letter : el) {
     for (auto next_index : next_letter) {
       if (element_to_component_[next_index] != -1) {
-        transitions_[component].insert(element_to_component_[next_index]);
         continue;
       }
       GetComponent(transposed_monoid, next_index, component);
@@ -132,17 +177,28 @@ void CondensationGraphBuilder::GetComponent(const TransposedGraph& transposed_mo
 
 CondensationGraph CondensationGraphBuilder::Build(const TransposedGraph& transposed_monoid, const std::vector<ElementIndex>& topsort) {
   element_to_component_.assign(transposed_monoid.size(), -1);
-  transitions_.clear();
   size_t component = 0;
   for (auto index : topsort | std::ranges::views::reverse) {
     if (element_to_component_[index] != -1) {
       continue;
     }
-    transitions_.push_back({});
     GetComponent(transposed_monoid, index, component);
     component++;
   }
-  return ToCondensationGraph(std::move(element_to_component_), std::move(transitions_));
+
+  std::vector<std::unordered_set<size_t>> transitions(component);
+  for (size_t element = 0; element < monoid_.size(); element++) {
+    auto elements_component = element_to_component_[element];
+    for (auto transition : monoid_[element].transitions) {
+      auto transitions_component = element_to_component_[transition];
+      if (transitions_component == elements_component) {
+        continue;
+      }
+      transitions[elements_component].insert(transitions_component);
+    }
+  }
+
+  return ToCondensationGraph(std::move(element_to_component_), std::move(transitions));
 }
 
 std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid& monoid, const std::vector<std::vector<ElementIndex>>& indices) {

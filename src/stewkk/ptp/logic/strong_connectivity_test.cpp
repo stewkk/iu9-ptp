@@ -33,7 +33,7 @@ TEST(StrongConnectivityTest, FindRightIdeals) {
   auto monoid = MonoidBuilder(letter_transformations).Build();
   auto condensation_graph = CondensationGraphBuilder(monoid).Build();
 
-  auto right_ideals = RightIdealsFinder(monoid, condensation_graph).FindRightIdeals();
+  auto right_ideals = IdealsBuilder(monoid, condensation_graph).Build();
 
   ASSERT_THAT(IndicesToWords(monoid, right_ideals),
               Eq(std::vector<std::vector<std::string>>{
@@ -51,7 +51,7 @@ TEST(StrongConnectivityTest, FindRightIdealsComplex) {
   VisualizeDot(tmp, monoid);
 
   auto scc = ToSCCs(condensation_graph);
-  auto right_ideals = RightIdealsFinder(monoid, condensation_graph).FindRightIdeals();
+  auto right_ideals = IdealsBuilder(monoid, condensation_graph).Build();
 
   ASSERT_THAT(IndicesToWords(monoid, scc),
               Eq(std::vector<std::vector<std::string>>{
@@ -66,7 +66,16 @@ TEST(StrongConnectivityTest, FindRightIdealsComplex) {
                    "cca",   "ccc",   "acac",  "acca",  "caca",   "cacc",   "ccac",   "acacc",
                    "accac", "cacac", "ccaca", "ccacc", "accacc", "cacacc", "ccacac", "ccacacc"},
                   {"cca", "acca", "ccac", "accac", "ccaca", "ccacc", "accacc", "ccacac", "ccacacc"},
+                  {"ca", "cac", "cca", "acca", "caca", "cacc", "ccac", "accac", "cacac", "ccaca",
+                   "ccacc", "accacc", "cacacc", "ccacac", "ccacacc"},
+                  {"a",     "ac",    "ca",    "aca",    "acc",    "cac",    "cca",
+                   "acac",  "acca",  "caca",  "cacc",   "ccac",   "acacc",  "accac",
+                   "cacac", "ccaca", "ccacc", "accacc", "cacacc", "ccacac", "ccacacc"},
+                  {"a", "ac", "aca", "acc", "cca", "acac", "acca", "ccac", "acacc", "accac",
+                   "ccaca", "ccacc", "accacc", "ccacac", "ccacacc"},
                   {"ca", "cac", "acca", "caca", "cacc", "accac", "cacac", "accacc", "cacacc"},
+                  {"a", "ac", "ca", "aca", "acc", "cac", "acac", "acca", "caca", "cacc", "acacc",
+                   "accac", "cacac", "accacc", "cacacc"},
                   {"a", "ac", "aca", "acc", "acac", "acca", "acacc", "accac", "accacc"},
                   {"acca", "accac", "accacc"}}));
 }
@@ -80,10 +89,18 @@ TEST(StrongConnectivityTest, FindLeftIdeals) {
   auto monoid = MonoidBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
   auto condensation_graph = CondensationGraphBuilder(monoid).Build();
 
-  auto left_ideals = RightIdealsFinder(monoid, condensation_graph).FindRightIdeals();
+  auto left_ideals = IdealsBuilder(monoid, condensation_graph).Build();
 
   ASSERT_THAT(IndicesToWords(monoid, left_ideals),
-              Eq(std::vector<std::vector<std::string>>{}));
+              Eq(std::vector<std::vector<std::string>>{{"a", "b", "c", "ca", "ab", "bb"},
+                                                       {"c", "ab"},
+                                                       {"a", "c", "ca", "ab"},
+                                                       {"c", "ca", "ab"},
+                                                       {"c"},
+                                                       {"a", "c", "ca"},
+                                                       {"c", "ca"},
+                                                       {"a", "ca"},
+                                                       {"ca"}}));
 }
 
 }  // namespace stewkk::ptp

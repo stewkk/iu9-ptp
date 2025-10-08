@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <set>
 #include <unordered_set>
 
 #include <stewkk/ptp/models/monoid.hpp>
@@ -10,19 +9,20 @@
 
 namespace stewkk::ptp {
 
-class RightIdealsFinder {
+class IdealsBuilder {
 public:
-    RightIdealsFinder(const TransformationMonoid& monoid, CondensationGraph graph);
-    std::vector<std::vector<ElementIndex>> FindRightIdeals();
+    IdealsBuilder(TransformationMonoid monoid, CondensationGraph graph);
+    std::vector<std::vector<ElementIndex>> Build();
 
 private:
-    void FindRightIdeals(size_t current_component_index);
+    std::vector<size_t> GetDescentants(std::vector<size_t> vertices);
+
+    void Generate(std::vector<size_t>& prefix, std::vector<std::vector<ElementIndex>>& ideals);
 
 private:
-    const TransformationMonoid& monoid_;
-    std::vector<std::set<ElementIndex>> component_to_ideal_;
-    std::vector<size_t> element_to_component_;
-    const StronglyConnectedComponents scc_;
+    TransformationMonoid monoid_;
+    CondensationGraph graph_;
+    StronglyConnectedComponents scc_;
 };
 
 class Topsorter {
@@ -53,7 +53,6 @@ private:
 
   private:
     std::vector<int32_t> element_to_component_;
-    std::vector<std::unordered_set<size_t>> transitions_;
     const TransformationMonoid& monoid_;
 };
 
