@@ -43,9 +43,9 @@ WordToTransformationDTO ReadTransformations(std::istream& input) {
 
 InputDTO ProcessInput(std::istream& input) {
   return {
-    .words = ReadWordsSorted(input),
-    .transformations = ReadTransformations(input),
+      .words = ReadWordsSorted(input),
+      .transformations = ReadTransformations(input),
   };
 }
 
-}  // stewkk::ptp
+}  // namespace stewkk::ptp

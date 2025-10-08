@@ -2,8 +2,8 @@
 
 #include <fstream>
 
-#include <stewkk/ptp/logic/monoid.hpp>
 #include <stewkk/ptp/logic/dot.hpp>
+#include <stewkk/ptp/logic/monoid.hpp>
 
 using ::testing::Eq;
 
@@ -20,8 +20,7 @@ TEST(MonoidVisualizationTest, Simple) {
   };
   auto monoid = CayleyGraphBuilder(letter_transformations).Build();
   std::ifstream f{kSimpleOutputPath};
-  std::string expected((std::istreambuf_iterator<char>(f)),
-                       std::istreambuf_iterator<char>());
+  std::string expected((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
   std::ostringstream dot_output;
 
   VisualizeDot(dot_output, monoid);

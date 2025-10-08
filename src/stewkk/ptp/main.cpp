@@ -1,25 +1,27 @@
+#include <fstream>
 #include <iostream>
 #include <ranges>
-#include <fstream>
 
-#include <stewkk/ptp/logic/input.hpp>
 #include <stewkk/ptp/logic/dot.hpp>
-#include <stewkk/ptp/logic/strong_connectivity.hpp>
+#include <stewkk/ptp/logic/input.hpp>
 #include <stewkk/ptp/logic/monoid.hpp>
+#include <stewkk/ptp/logic/strong_connectivity.hpp>
 
 using namespace stewkk::ptp;
 
 std::string FormatIdeal(const std::vector<std::vector<std::string>>& ideals) {
-  return ideals | std::ranges::views::transform([](const auto& ideal){
-    return ideal | std::ranges::views::join_with(' ') | std::ranges::to<std::string>();
-  }) | std::ranges::views::join_with('\n') | std::ranges::to<std::string>();
+  return ideals | std::ranges::views::transform([](const auto& ideal) {
+           return ideal | std::ranges::views::join_with(' ') | std::ranges::to<std::string>();
+         })
+         | std::ranges::views::join_with('\n') | std::ranges::to<std::string>();
 }
 
 int32_t main() {
   auto input = ProcessInput(std::cin);
 
   auto letter_transformations = ToLetterTransformations(input);
-  auto left_graph = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
+  auto left_graph
+      = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
   auto right_graph = CayleyGraphBuilder(letter_transformations).Build();
 
   std::ofstream left_f{"build/left.dot"};
@@ -35,8 +37,7 @@ int32_t main() {
 
   auto left_ideals_words = IndicesToWords(left_graph, left_ideals);
   auto right_ideals_words = IndicesToWords(right_graph, right_ideals);
-  auto ideals = BuildIdeals(left_ideals_words,
-                            right_ideals_words);
+  auto ideals = BuildIdeals(left_ideals_words, right_ideals_words);
 
   std::cout << "Left ideals:\n" << FormatIdeal(left_ideals_words) << '\n';
   std::cout << "Right ideals:\n" << FormatIdeal(right_ideals_words) << '\n';

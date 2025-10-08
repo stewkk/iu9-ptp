@@ -15,4 +15,4 @@ struct InputDTO {
   WordToTransformationDTO transformations;
 };
 
-} // stewkk::ptp
+}  // namespace stewkk::ptp

@@ -1,8 +1,8 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 namespace stewkk::ptp {
 
@@ -12,13 +12,13 @@ using LetterToTransformation = std::map<char, Transformation>;
 using ElementIndex = size_t;
 
 struct MonoidElement {
-    std::string word;
-    Transformation transformation;
-    std::vector<ElementIndex> transitions;
+  std::string word;
+  Transformation transformation;
+  std::vector<ElementIndex> transitions;
 
-    bool operator<=>(const MonoidElement& other) const = default;
+  bool operator<=>(const MonoidElement& other) const = default;
 };
 
 using CayleyGraph = std::vector<MonoidElement>;
 
-} // stewkk::ptp
+}  // namespace stewkk::ptp

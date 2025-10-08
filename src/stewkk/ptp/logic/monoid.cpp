@@ -26,8 +26,8 @@ std::string LeftWordComposition(const MonoidElement& lhs, const MonoidElement& r
 }
 
 CayleyGraphBuilder::CayleyGraphBuilder(const LetterToTransformation& letter_transformations,
-                             CompositionStrategy composition_strategy,
-                             WordCompositionStrategy word_composition_strategy)
+                                       CompositionStrategy composition_strategy,
+                                       WordCompositionStrategy word_composition_strategy)
     : composition_strategy_(std::move(composition_strategy)),
       word_composition_strategy_(std::move(word_composition_strategy)) {
   monoid_elements_.reserve(letter_transformations.size());
@@ -55,14 +55,14 @@ void CayleyGraphBuilder::AddComposition(size_t element_index, size_t letter_inde
 }
 
 CayleyGraph CayleyGraphBuilder::Build() {
-    auto letters_count = monoid_elements_.size();
-    for (size_t i = 0; i < monoid_elements_.size(); i++) {
-        for (int j = 0; j < letters_count; j++) {
-          AddComposition(i, j);
-        }
+  auto letters_count = monoid_elements_.size();
+  for (size_t i = 0; i < monoid_elements_.size(); i++) {
+    for (int j = 0; j < letters_count; j++) {
+      AddComposition(i, j);
     }
+  }
 
-    return std::move(monoid_elements_);
+  return std::move(monoid_elements_);
 }
 
 LetterToTransformation ToLetterTransformations(InputDTO input) {
@@ -72,12 +72,13 @@ LetterToTransformation ToLetterTransformations(InputDTO input) {
   }
   LetterToTransformation transformations;
   for (auto [key, transformation] : input.transformations) {
-    auto letter_transformation = transformation | std::ranges::views::transform([&](const auto& el) {
-      return char_to_index[el.second[0]];
-    }) | std::ranges::to<std::vector>();
+    auto letter_transformation = transformation
+                                 | std::ranges::views::transform(
+                                     [&](const auto& el) { return char_to_index[el.second[0]]; })
+                                 | std::ranges::to<std::vector>();
     transformations[key[0]] = std::move(letter_transformation);
   }
   return transformations;
 }
 
-}  // stewkk::ptp
+}  // namespace stewkk::ptp

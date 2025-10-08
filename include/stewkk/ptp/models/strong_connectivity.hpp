@@ -13,4 +13,4 @@ struct CondensationGraph {
   std::vector<std::vector<size_t>> transitions;
 };
 
-} // stewkk::ptp
+}  // namespace stewkk::ptp

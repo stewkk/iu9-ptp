@@ -2,8 +2,8 @@
 
 #include <fstream>
 
-#include <stewkk/ptp/logic/monoid.hpp>
 #include <stewkk/ptp/logic/dot.hpp>
+#include <stewkk/ptp/logic/monoid.hpp>
 
 using ::testing::Eq;
 using ::testing::IsFalse;

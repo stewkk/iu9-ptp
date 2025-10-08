@@ -8,4 +8,4 @@ namespace stewkk::ptp {
 
 void VisualizeDot(std::ostream& out, const CayleyGraph& monoid);
 
-}  // stewkk::ptp
+}  // namespace stewkk::ptp

@@ -8,4 +8,4 @@ namespace stewkk::ptp {
 
 InputDTO ProcessInput(std::istream& input);
 
-}  // stewkk::ptp
+}  // namespace stewkk::ptp

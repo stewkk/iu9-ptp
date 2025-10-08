@@ -1,10 +1,10 @@
 #include <gmock/gmock.h>
 
-#include <fstream>
 #include <format>
+#include <fstream>
 
-#include <stewkk/ptp/models/dto.hpp>
 #include <stewkk/ptp/logic/input.hpp>
+#include <stewkk/ptp/models/dto.hpp>
 
 using ::testing::Eq;
 
@@ -19,10 +19,10 @@ TEST(ProcessInputTest, ReturnsSortedWordSet) {
   auto got = ProcessInput(input);
 
   ASSERT_THAT(got.words, Eq(std::vector<WordDTO>{
-        "x",
-        "y",
-        "z",
-      }));
+                             "x",
+                             "y",
+                             "z",
+                         }));
 }
 
 TEST(ProcessInputTest, ReturnsWordToTransformationMapping) {
@@ -31,25 +31,25 @@ TEST(ProcessInputTest, ReturnsWordToTransformationMapping) {
   auto got = ProcessInput(input);
 
   ASSERT_THAT(got.transformations, Eq(WordToTransformationDTO{
-                               {"a",
-                                {
-                                    {"x", "x"},
-                                    {"y", "y"},
-                                    {"z", "x"},
-                                }},
-                               {"b",
-                                {
-                                    {"x", "z"},
-                                    {"y", "y"},
-                                    {"z", "x"},
-                                }},
-                               {"c",
-                                {
-                                    {"x", "z"},
-                                    {"y", "z"},
-                                    {"z", "z"},
-                                }},
-                           }));
+                                       {"a",
+                                        {
+                                            {"x", "x"},
+                                            {"y", "y"},
+                                            {"z", "x"},
+                                        }},
+                                       {"b",
+                                        {
+                                            {"x", "z"},
+                                            {"y", "y"},
+                                            {"z", "x"},
+                                        }},
+                                       {"c",
+                                        {
+                                            {"x", "z"},
+                                            {"y", "z"},
+                                            {"z", "z"},
+                                        }},
+                                   }));
 }
 
 }  // namespace stewkk::ptp

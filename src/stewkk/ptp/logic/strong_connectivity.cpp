@@ -1,7 +1,7 @@
 #include <stewkk/ptp/logic/strong_connectivity.hpp>
 
-#include <queue>
 #include <algorithm>
+#include <queue>
 #include <ranges>
 #include <set>
 #include <unordered_set>
@@ -40,8 +40,7 @@ CondensationGraph ToCondensationGraph(std::vector<int32_t> element_to_component,
 
 }  // namespace
 
-IdealsBuilder::IdealsBuilder(CayleyGraph monoid,
-                                     CondensationGraph graph)
+IdealsBuilder::IdealsBuilder(CayleyGraph monoid, CondensationGraph graph)
     : monoid_(std::move(monoid)), graph_(std::move(graph)), scc_(ToSCCs(graph_)) {}
 
 std::vector<std::vector<ElementIndex>> IdealsBuilder::Build() {
@@ -51,7 +50,8 @@ std::vector<std::vector<ElementIndex>> IdealsBuilder::Build() {
   return ideals;
 }
 
-void IdealsBuilder::Generate(std::vector<size_t>& prefix, std::vector<std::vector<ElementIndex>>& ideals) {
+void IdealsBuilder::Generate(std::vector<size_t>& prefix,
+                             std::vector<std::vector<ElementIndex>>& ideals) {
   auto ideal_components = GetDescentants(prefix);
   if (!ideal_components.empty()) {
     auto ideal_vertices
@@ -67,7 +67,7 @@ void IdealsBuilder::Generate(std::vector<size_t>& prefix, std::vector<std::vecto
   }
   size_t from = 0;
   if (prefix.size() > 0) {
-    from = prefix.back()+1;
+    from = prefix.back() + 1;
   }
   prefix.push_back(0);
   for (size_t i = from; i < graph_.transitions.size(); i++) {
@@ -116,42 +116,43 @@ std::vector<size_t> IdealsBuilder::GetDescentants(std::vector<size_t> vertices) 
 Topsorter::Topsorter(const CayleyGraph& monoid) : monoid_(monoid) {}
 
 std::vector<ElementIndex> Topsorter::Topsort() {
-    used_.assign(monoid_.size(), false);
-    topsort_.clear();
-    for (size_t i = 0; i < monoid_.size(); i++) {
-      if (used_[i]) {
-        continue;
-      }
-      Topsort(i);
+  used_.assign(monoid_.size(), false);
+  topsort_.clear();
+  for (size_t i = 0; i < monoid_.size(); i++) {
+    if (used_[i]) {
+      continue;
     }
-    return topsort_;
+    Topsort(i);
+  }
+  return topsort_;
 }
 
 void Topsorter::Topsort(ElementIndex index) {
-    used_[index] = true;
-    const auto& el = monoid_[index];
+  used_[index] = true;
+  const auto& el = monoid_[index];
 
-    for (auto next_index : el.transitions) {
-        if (used_[next_index]) {
-            continue;
-        }
-        Topsort(next_index);
+  for (auto next_index : el.transitions) {
+    if (used_[next_index]) {
+      continue;
     }
+    Topsort(next_index);
+  }
 
-    topsort_.push_back(index);
+  topsort_.push_back(index);
 }
 
 CondensationGraphBuilder::CondensationGraphBuilder(const CayleyGraph& monoid) : monoid_(monoid) {}
 
 CondensationGraph CondensationGraphBuilder::Build() {
-    auto topsort = Topsorter(monoid_).Topsort();
+  auto topsort = Topsorter(monoid_).Topsort();
 
-    auto transposed = GetTransposedGraph(monoid_);
+  auto transposed = GetTransposedGraph(monoid_);
 
-    return Build(transposed, topsort);
+  return Build(transposed, topsort);
 }
 
-void CondensationGraphBuilder::GetComponent(const TransposedGraph& transposed_monoid, ElementIndex index, size_t component) {
+void CondensationGraphBuilder::GetComponent(const TransposedGraph& transposed_monoid,
+                                            ElementIndex index, size_t component) {
   element_to_component_[index] = component;
   const auto& el = transposed_monoid[index];
 
@@ -165,7 +166,8 @@ void CondensationGraphBuilder::GetComponent(const TransposedGraph& transposed_mo
   }
 }
 
-CondensationGraph CondensationGraphBuilder::Build(const TransposedGraph& transposed_monoid, const std::vector<ElementIndex>& topsort) {
+CondensationGraph CondensationGraphBuilder::Build(const TransposedGraph& transposed_monoid,
+                                                  const std::vector<ElementIndex>& topsort) {
   element_to_component_.assign(transposed_monoid.size(), -1);
   size_t component = 0;
   for (auto index : topsort | std::ranges::views::reverse) {
@@ -191,14 +193,16 @@ CondensationGraph CondensationGraphBuilder::Build(const TransposedGraph& transpo
   return ToCondensationGraph(std::move(element_to_component_), std::move(transitions));
 }
 
-std::vector<std::vector<std::string>> IndicesToWords(const CayleyGraph& monoid, const std::vector<std::vector<ElementIndex>>& indices) {
+std::vector<std::vector<std::string>> IndicesToWords(
+    const CayleyGraph& monoid, const std::vector<std::vector<ElementIndex>>& indices) {
   return indices | std::ranges::views::transform([&monoid](const auto& vec) {
-               return IndicesToWords(monoid, vec);
-             })
-             | std::ranges::to<std::vector>();
+           return IndicesToWords(monoid, vec);
+         })
+         | std::ranges::to<std::vector>();
 }
 
-std::vector<std::string> IndicesToWords(const CayleyGraph& monoid, const std::vector<ElementIndex>& indices) {
+std::vector<std::string> IndicesToWords(const CayleyGraph& monoid,
+                                        const std::vector<ElementIndex>& indices) {
   return indices | std::ranges::views::transform([&monoid](const auto& index) {
            return monoid[index].word;
          })
@@ -206,7 +210,7 @@ std::vector<std::string> IndicesToWords(const CayleyGraph& monoid, const std::ve
 }
 
 StronglyConnectedComponents ToSCCs(const CondensationGraph& graph) {
-  auto components_count = std::ranges::max(graph.element_to_component)+1;
+  auto components_count = std::ranges::max(graph.element_to_component) + 1;
   StronglyConnectedComponents result(components_count);
   for (auto [el, component] : graph.element_to_component | std::ranges::views::enumerate) {
     result[component].push_back(el);
@@ -219,10 +223,11 @@ std::vector<std::vector<std::string>> BuildIdeals(
     const std::vector<std::vector<std::string>>& right) {
   std::vector<std::vector<std::string>> result;
   auto set = left | std::ranges::views::transform([](const auto& ideal) {
-    auto tmp = ideal;
-    std::ranges::sort(tmp);
-    return tmp;
-  }) | std::ranges::to<std::set>();
+               auto tmp = ideal;
+               std::ranges::sort(tmp);
+               return tmp;
+             })
+             | std::ranges::to<std::set>();
 
   std::copy_if(right.begin(), right.end(), std::back_inserter(result), [&set](const auto& el) {
     auto tmp = el;

@@ -86,7 +86,8 @@ TEST(StrongConnectivityTest, FindLeftIdeals) {
       {'b', {2, 1, 0}},
       {'c', {2, 2, 2}},
   };
-  auto monoid = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
+  auto monoid
+      = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
   auto condensation_graph = CondensationGraphBuilder(monoid).Build();
 
   auto left_ideals = IdealsBuilder(monoid, condensation_graph).Build();
@@ -109,7 +110,8 @@ TEST(StrongConnectivityTest, FindTwoSidedIdeals) {
       {'b', {2, 1, 0}},
       {'c', {2, 2, 2}},
   };
-  auto left_graph = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
+  auto left_graph
+      = CayleyGraphBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
   auto right_graph = CayleyGraphBuilder(letter_transformations).Build();
 
   auto left_condensation_graph = CondensationGraphBuilder(left_graph).Build();

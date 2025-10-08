@@ -1,7 +1,7 @@
 #include <stewkk/ptp/logic/dot.hpp>
 
-#include <ranges>
 #include <format>
+#include <ranges>
 
 namespace stewkk::ptp {
 
