@@ -1,5 +1,6 @@
 #include <stewkk/ptp/logic/strong_connectivity.hpp>
 
+#include <algorithm>
 #include <ranges>
 
 namespace stewkk::ptp {
@@ -22,19 +23,25 @@ TransposedGraph GetTransposedGraph(const TransformationMonoid& monoid) {
   return result;
 }
 
+CondensationGraph ToCondensationGraph(std::vector<int32_t> element_to_component,
+                                      std::vector<std::unordered_set<size_t>> transitions) {
+  return CondensationGraph{
+      std::vector<size_t>{element_to_component.begin(), element_to_component.end()},
+      transitions | std::ranges::views::transform([](const auto& set) {
+        auto vec = set | std::ranges::to<std::vector>();
+        std::ranges::sort(vec);
+        return vec;
+      }) | std::ranges::to<std::vector>(),
+  };
+}
+
 }  // namespace
 
 RightIdealsFinder::RightIdealsFinder(const TransformationMonoid& monoid,
-                                     const StronglyConnectedComponents& scc)
-    : monoid_(monoid), scc_(scc) {}
+                                     CondensationGraph graph)
+    : monoid_(monoid), element_to_component_(graph.element_to_component), scc_(ToSCCs(std::move(graph))) {}
 
 std::vector<std::vector<ElementIndex>> RightIdealsFinder::FindRightIdeals() {
-  element_to_component_.resize(monoid_.size());
-  for (auto [component_index, component] : std::ranges::views::enumerate(scc_)) {
-    for (auto element : component) {
-      element_to_component_[element] = component_index;
-    }
-  }
   component_to_ideal_.assign(scc_.size(), {});
   for (size_t i = 0; i < scc_.size(); i++) {
     if (component_to_ideal_[i].empty()) {
@@ -98,30 +105,24 @@ void Topsorter::Topsort(ElementIndex index) {
     topsort_.push_back(index);
 }
 
-SCCFinder::SCCFinder(const TransformationMonoid& monoid) : monoid_(monoid) {}
+CondensationGraphBuilder::CondensationGraphBuilder(const TransformationMonoid& monoid) : monoid_(monoid) {}
 
-StronglyConnectedComponents SCCFinder::Find() {
+CondensationGraph CondensationGraphBuilder::Build() {
     auto topsort = Topsorter(monoid_).Topsort();
 
     auto transposed = GetTransposedGraph(monoid_);
 
-    return FindSCCs(transposed, topsort);
+    return Build(transposed, topsort);
 }
 
-std::vector<ElementIndex> SCCFinder::GetComponent(const TransposedGraph& transposed_monoid, ElementIndex index) {
-  std::vector<ElementIndex> component;
-  GetComponent(transposed_monoid, index, component);
-  return component;
-}
-
-void SCCFinder::GetComponent(const TransposedGraph& transposed_monoid, ElementIndex index, std::vector<ElementIndex>& component) {
-  used_[index] = true;
-  component.push_back(index);
+void CondensationGraphBuilder::GetComponent(const TransposedGraph& transposed_monoid, ElementIndex index, size_t component) {
+  element_to_component_[index] = component;
   const auto& el = transposed_monoid[index];
 
   for (const auto& next_letter : el) {
     for (auto next_index : next_letter) {
-      if (used_[next_index]) {
+      if (element_to_component_[next_index] != -1) {
+        transitions_[component].insert(element_to_component_[next_index]);
         continue;
       }
       GetComponent(transposed_monoid, next_index, component);
@@ -129,16 +130,19 @@ void SCCFinder::GetComponent(const TransposedGraph& transposed_monoid, ElementIn
   }
 }
 
-StronglyConnectedComponents SCCFinder::FindSCCs(const TransposedGraph& transposed_monoid, const std::vector<ElementIndex>& topsort) {
-  StronglyConnectedComponents result;
-  used_.assign(transposed_monoid.size(), false);
+CondensationGraph CondensationGraphBuilder::Build(const TransposedGraph& transposed_monoid, const std::vector<ElementIndex>& topsort) {
+  element_to_component_.assign(transposed_monoid.size(), -1);
+  transitions_.clear();
+  size_t component = 0;
   for (auto index : topsort | std::ranges::views::reverse) {
-    if (used_[index]) {
+    if (element_to_component_[index] != -1) {
       continue;
     }
-    result.push_back(GetComponent(transposed_monoid, index));
+    transitions_.push_back({});
+    GetComponent(transposed_monoid, index, component);
+    component++;
   }
-  return result;
+  return ToCondensationGraph(std::move(element_to_component_), std::move(transitions_));
 }
 
 std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid& monoid, const std::vector<std::vector<ElementIndex>>& indices) {
@@ -149,6 +153,15 @@ std::vector<std::vector<std::string>> IndicesToWords(const TransformationMonoid&
                       | std::ranges::to<std::vector>();
              })
              | std::ranges::to<std::vector>();
+}
+
+StronglyConnectedComponents ToSCCs(const CondensationGraph& graph) {
+  auto components_count = std::ranges::max(graph.element_to_component)+1;
+  StronglyConnectedComponents result(components_count);
+  for (auto [el, component] : graph.element_to_component | std::ranges::views::enumerate) {
+    result[component].push_back(el);
+  }
+  return result;
 }
 
 }  // namespace stewkk::ptp

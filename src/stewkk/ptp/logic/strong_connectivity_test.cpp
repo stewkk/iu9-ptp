@@ -17,7 +17,8 @@ TEST(StrongConnectivityTest, FindsSCCs) {
   };
   auto monoid = MonoidBuilder(letter_transformations).Build();
 
-  auto got = SCCFinder(monoid).Find();
+  auto condensation_graph = CondensationGraphBuilder(monoid).Build();
+  auto got = ToSCCs(condensation_graph);
 
   ASSERT_THAT(IndicesToWords(monoid, got),
               Eq(std::vector<std::vector<std::string>>{{"b", "bb"}, {"a", "ab"}, {"c", "ca"}}));
@@ -30,9 +31,9 @@ TEST(StrongConnectivityTest, FindRightIdeals) {
       {'c', {2, 2, 2}},
   };
   auto monoid = MonoidBuilder(letter_transformations).Build();
-  auto scc = SCCFinder(monoid).Find();
+  auto condensation_graph = CondensationGraphBuilder(monoid).Build();
 
-  auto right_ideals = RightIdealsFinder(monoid, scc).FindRightIdeals();
+  auto right_ideals = RightIdealsFinder(monoid, condensation_graph).FindRightIdeals();
 
   ASSERT_THAT(IndicesToWords(monoid, right_ideals),
               Eq(std::vector<std::vector<std::string>>{
@@ -45,19 +46,20 @@ TEST(StrongConnectivityTest, FindRightIdealsComplex) {
       {'c', {2, 0, 1}},
   };
   auto monoid = MonoidBuilder(letter_transformations).Build();
-  auto scc = SCCFinder(monoid).Find();
+  auto condensation_graph = CondensationGraphBuilder(monoid).Build();
   std::ofstream tmp{"/tmp/out3.dot"};
   VisualizeDot(tmp, monoid);
 
-  auto right_ideals = RightIdealsFinder(monoid, scc).FindRightIdeals();
+  auto scc = ToSCCs(condensation_graph);
+  auto right_ideals = RightIdealsFinder(monoid, condensation_graph).FindRightIdeals();
 
   ASSERT_THAT(IndicesToWords(monoid, scc),
               Eq(std::vector<std::vector<std::string>>{
-                  {"c", "ccc", "cc"},
-                  {"cca", "ccacac", "ccaca", "ccac", "ccacacc", "ccacc"},
-                  {"ca", "cacac", "caca", "cac", "cacacc", "cacc"},
-                  {"a", "acac", "aca", "ac", "acacc", "acc"},
-                  {"acca", "accacc", "accac"}}));
+                  {"c", "cc", "ccc"},
+                  {"cca", "ccac", "ccaca", "ccacc", "ccacac", "ccacacc"},
+                  {"ca", "cac", "caca", "cacc", "cacac", "cacacc"},
+                  {"a", "ac", "aca", "acc", "acac", "acacc"},
+                  {"acca", "accac", "accacc"}}));
   ASSERT_THAT(IndicesToWords(monoid, right_ideals),
               Eq(std::vector<std::vector<std::string>>{
                   {"a",     "c",     "ac",    "ca",    "cc",     "aca",    "acc",    "cac",
@@ -76,9 +78,9 @@ TEST(StrongConnectivityTest, FindLeftIdeals) {
       {'c', {2, 2, 2}},
   };
   auto monoid = MonoidBuilder(letter_transformations, LeftComposition, LeftWordComposition).Build();
-  auto scc = SCCFinder(monoid).Find();
+  auto condensation_graph = CondensationGraphBuilder(monoid).Build();
 
-  auto left_ideals = RightIdealsFinder(monoid, scc).FindRightIdeals();
+  auto left_ideals = RightIdealsFinder(monoid, condensation_graph).FindRightIdeals();
 
   ASSERT_THAT(IndicesToWords(monoid, left_ideals),
               Eq(std::vector<std::vector<std::string>>{}));
