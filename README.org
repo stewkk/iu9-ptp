@@ -1,0 +1,94 @@
+#+title: Readme
+
+* Сборка
+
+Нужен компилятор с поддержкой C++23. У меня:
+
+#+begin_example
+$ clang --version
+clang version 21.1.0-rc1
+#+end_example
+
+Сборка с помощью CMake:
+
+#+begin_src sh
+mkdir build
+cd build
+cmake .. -D CMAKE_BUILD_TYPE=Debug
+cd ..
+make build
+#+end_src
+
+Тесты:
+
+#+begin_src sh
+make test
+#+end_src
+
+* Запуск
+
+#+begin_src sh
+make build
+./build/bin/ptp
+#+end_src
+
+Пример ввода:
+
+#+begin_example
+3
+x
+y
+z
+9
+x a x
+y a y
+z a x
+x b z
+y b y
+z b x
+x c z
+y c z
+z c z
+#+end_example
+
+Формат ввода:
+
+#+begin_example
+[количество элементов в множестве M]
+[элементы множества M]
+...
+[количество элементов таблицы]
+[элемент множества M] [буква] [элемент множества M]
+...
+#+end_example
+
+Вывод:
+
+#+begin_example
+Left ideals:
+a b c ca ab bb
+c ab
+a c ca ab
+c ca ab
+c
+a c ca
+c ca
+a ca
+ca
+Right ideals:
+a b c ab bb ca
+a c ab ca
+c ca
+Ideals:
+a b c ab bb ca
+a c ab ca
+c ca
+#+end_example
+
+Дополнительно код на dot выводится в ~build/left.dot~ и ~build/right.dot~. Можно
+скомпилировать так:
+
+#+begin_src sh
+dot -T png build/left.dot > build/left.png
+dot -T png build/right.dot > build/right.png
+#+end_src

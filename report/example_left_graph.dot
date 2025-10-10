@@ -1,0 +1,26 @@
+digraph G {
+"a"
+"b"
+"c"
+"ca"
+"ab"
+"bb"
+"a" -> "a" [label="a"]
+"a" -> "a" [label="b"]
+"a" -> "ca" [label="c"]
+"b" -> "ab" [label="a"]
+"b" -> "bb" [label="b"]
+"b" -> "ca" [label="c"]
+"c" -> "c" [label="a"]
+"c" -> "c" [label="b"]
+"c" -> "c" [label="c"]
+"ca" -> "ca" [label="a"]
+"ca" -> "ca" [label="b"]
+"ca" -> "ca" [label="c"]
+"ab" -> "ab" [label="a"]
+"ab" -> "ab" [label="b"]
+"ab" -> "c" [label="c"]
+"bb" -> "a" [label="a"]
+"bb" -> "b" [label="b"]
+"bb" -> "c" [label="c"]
+}

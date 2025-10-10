@@ -1,0 +1,17 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\node (b+ bb) at (70.425bp,196.5bp) [draw,ellipse] {b, bb};
+  \node (a+ ab) at (35.425bp,107.25bp) [draw,ellipse] {a, ab};
+  \node (c+ ca) at (70.425bp,18.0bp) [draw,ellipse] {c, ca};
+  \draw [->] (b+ bb) ..controls (58.817bp,166.56bp) and (52.153bp,149.95bp)  .. (a+ ab);
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (60.185bp,151.88bp) node {a};
+  \draw [->] (b+ bb) ..controls (75.439bp,164.05bp) and (78.266bp,143.41bp)  .. (79.425bp,125.25bp) .. controls (80.443bp,109.28bp) and (80.443bp,105.22bp)  .. (79.425bp,89.25bp) .. controls (78.547bp,75.487bp) and (76.711bp,60.3bp)  .. (c+ ca);
+  \draw (83.939bp,107.25bp) node {c};
+  \draw [->] (a+ ab) ..controls (47.032bp,77.314bp) and (53.697bp,60.701bp)  .. (c+ ca);
+  \draw (59.81bp,62.625bp) node {c};
+%
+\end{tikzpicture}
+
