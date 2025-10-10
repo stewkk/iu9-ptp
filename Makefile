@@ -11,4 +11,7 @@ dot:
 	dot -T png -O /tmp/out4.dot
 	loupe /tmp/out4.dot.png
 
-.PHONY: gdb test build dot
+report:
+	cd report && latexmk -pdfxe report.tex
+
+.PHONY: gdb test build dot report
