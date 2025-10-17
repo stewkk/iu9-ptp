@@ -1,0 +1,594 @@
+% !TeX TXS-program:bibliography = txs:///biber
+\documentclass[14pt, russian]{scrartcl}
+\input{header.tex}
+\addbibresource{biblio.bib}
+
+\usepackage{libertine}
+
+\DeclareFieldFormat{url}{%
+  \mkbibacro{URL}\addcolon\space
+  \href{#1}{\nolinkurl{\thefield{urlraw}}}}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+
+\begin{document}
+\sloppy
+
+\begin{titlepage}
+\thispagestyle{empty}
+
+\bmstuheader
+
+\vspace{3em}
+
+\begin{center}
+\Large {\textbf{\uline{ОТЧЁТ ПО ПРОИЗВОДСТВЕННОЙ}}} \\ {\textbf{\uline{ПРАКТИКЕ}}}
+\end{center}\normalsize
+
+\vspace{2ex}
+\noindent Студент \underline{\hspace{406pt}}
+
+\vspace{-2.1ex}
+\noindent\hspace{31ex}\scriptsize{(Фамилия, Имя, Отчество)}\normalsize
+
+\vspace{0.7ex}
+\noindent Группа \underline{\hspace{50pt}}
+
+\vspace{2ex}
+\noindent Тип практики \underline{\hspace{373pt}}
+
+\vspace{2.5ex}
+\noindent Название предприятия \underline{\hspace{16pt}\footnotesize Институт Программных Систем им. А.К. Айламазяна РАН\hspace{12pt}}\normalsize
+
+\vspace{\fill}
+
+
+\noindent Студент \underline{\hspace{1.5cm}} \hfill \underline{\hspace{4cm}}\quad
+\underline{\hspace{4cm}}
+
+\vspace{-2.1ex}
+\noindent\hspace{9ex}\scriptsize{(Группа)}\normalsize\hspace{170pt}\hspace{2ex}\scriptsize{(Подпись, дата)}\normalsize\hspace{30pt}\hspace{6ex}\scriptsize{(И.О. Фамилия)}\normalsize
+
+\bigskip
+
+\noindent Рекомендуемая оценка\hfill\underline{\hspace{195pt}}\hfill
+
+\bigskip
+
+\noindent \parbox{0.333\textwidth}{Руководитель практики\\от предприятия}
+\hfill \underline{\hspace{4cm}}\quad \underline{\hspace{4cm}}
+
+\vspace{-2ex}
+\noindent\hspace{13.5ex}\normalsize\hspace{170pt}\hspace{2ex}\scriptsize{(Подпись, дата)}\normalsize\hspace{30pt}\hspace{6ex}\scriptsize{(И.О. Фамилия)}\normalsize
+
+
+\bigskip
+
+\noindent Руководитель практики  \hfill \underline{\hspace{4cm}}\quad
+\underline{\hspace{4cm}}
+
+\vspace{-2ex}
+\noindent\hspace{13.5ex}\normalsize\hspace{170pt}\hspace{2ex}\scriptsize{(Подпись, дата)}\normalsize\hspace{30pt}\hspace{6ex}\scriptsize{(И.О. Фамилия)}\normalsize
+
+\vspace{2ex}
+\noindent Оценка\hfill\underline{\hspace{195pt}}
+
+\vfill
+
+%\vspace{\fill}
+
+
+
+\begin{center}
+\textsl{\the\year{} г.}
+\end{center}
+\end{titlepage}
+
+\setlength{\tabcolsep}{3pt}
+\newpage
+\setcounter{page}{2}
+%----------------------------------------------------------------------------
+%                  ОТСЮДА --- СОБСТВЕННО ТЕКСТ
+%----------------------------------------------------------------------------
+\renewcommand\contentsname{\hfill{\normalfont{СОДЕРЖАНИЕ}}\hfill}  %Оглавление
+\tableofcontents
+\newpage
+\section{Характеристика предприятия}
+
+\bigskip
+
+Производственная практика проходила в Институте программных систем
+Российской академии наук (кратко --- ИПС им. А.К. Айламазяна РАН). Институт Программных Систем был создан в апреле 1984 года как Филиал Института проблем кибернетики АН СССР по решению Правительства СССР, направленному на развитие вычислительной техники и информатики в стране. Руководителем ФИПК АН СССР был назначен д.т.н., профессор Альфред Карлович Айламазян. В 1986 году Филиал Института проблем кибернетики был преобразован в Институт программных систем АН СССР, а в 2008 году институту было присвоено имя его первого директора профессора А.К. Айламазяна.
+
+С момента создания основными научными направлениями
+деятельности института являлись:
+\begin{itemize}
+\item высокопроизводительные вычисления,
+\item программные системы для параллельных архитектур,
+\item автоматизация программирования,
+\item телекоммуникационные системы и медицинская информатика.
+\end{itemize}
+
+Сегодня Институт программных систем имени А.К. Айламазяна РАН объединяет пять исследовательских центров:
+\begin{itemize}
+\item Исследовательский центр мультипроцессорных систем (ИЦМС),
+\item Исследовательский центр медицинской информатики (ИЦМИ Интерин),
+\item Исследовательский центр искусственного интеллекта (ИЦИИ),
+\item Исследовательский центр процессов управления (ИЦПУ),
+\item Исследовательский центр системного анализа (ИЦСА).
+\end{itemize}
+
+Практика проходила в исследовательском центре мультипроцессорных систем, в лаборатории автоматизации программирования.
+
+\newpage
+\section{Индивидуальное задание}
+
+Конечный моноид (моноид трансформаций) над алфавитом $\Sigma$ определяется
+конечным множеством слов $M$ и таблицей трансформаций, соответствующей действиям
+букв на элементы $M$.
+
+Множество элементов моноида $I$ является двухсторонним (левым, правым) идеалом,
+если $MIM = I (MI = I, IM = I)$.
+
+По моноиду трансформаций построить множества его идеалов.
+
+\newpage
+\section{Теоретическая часть}
+
+\begin{Definition}[Конечный моноид]
+  $(M, \cdot, 1)$ --- конечный моноид, если:
+  \begin{enumerate}
+    \item M - конечное множество;
+    \item $\cdot$ - замкнутая, ассоциативная, бинарная операция над $M$;
+    \item $\forall x \in M: 1 \cdot x = x \cdot 1 = x$.
+  \end{enumerate}
+\end{Definition}
+
+\begin{Definition}[Трансформация]
+  Трансформация множества $X$ --- отображение $X \mapsto X$.
+\end{Definition}
+
+\begin{Definition}[Моноид трансформаций]
+  Пусть дано множество $M$. Множество трансформаций над $M$, замкнутое
+  относительно операции $\circ$ (композиция), называется моноидом трансформаций
+  над $M$. При этом единицей моноида трансформаций является эквивалентная
+  трансформация.
+\end{Definition}
+
+\begin{Definition}[Идеал]
+  $I \subset M$ --- идеал моноида $M$, если $MIM = I$. Т.е.
+  $\forall x, y \in M, k \in I: xky \in I$.
+\end{Definition}
+
+\begin{Definition}[Левый идеал]
+  $I \subset M$ --- левый идеал моноида $M$, если $MI = I$. Т.е.
+  $\forall x \in M, k \in I: xk \in I$.
+\end{Definition}
+
+\begin{Definition}[Правый идеал]
+  $I \subset M$ --- правый идеал моноида $M$, если $IM = I$. Т.е.
+  $\forall x \in M, k \in I: kx \in I$.
+\end{Definition}
+
+\begin{Definition}[Алфавит]
+  Алфавит --- конечное множество букв.
+\end{Definition}
+
+\begin{Example}[Алфавит]
+  $\Sigma = \{a, b, c\}$
+\end{Example}
+
+\begin{Definition}[Отношения Грина]
+  \begin{equation}
+    s \leq_{\mathcal{R}} t \Leftrightarrow \exists u \in S^{1} : s = tu
+  \end{equation}
+  \begin{equation}
+    s \leq_{\mathcal{L}} t \Leftrightarrow \exists u \in S^{1} : s = ut
+  \end{equation}
+  \begin{equation}
+    s \leq_{\mathcal{J}} t \Leftrightarrow \exists u, v \in S^{1} : s = utv
+  \end{equation}
+  \begin{equation}
+    s \leq_{\mathcal{H}} t \Leftrightarrow s \leq_{\mathcal{R}} t \quad{}\text{и}\quad{} s \leq_{\mathcal{L}} t
+  \end{equation}
+  Через идеалы:
+  \begin{equation}
+    s \leq_{\mathcal{R}} t \Leftrightarrow s S^{1} \subseteq t S^{1}
+  \end{equation}
+  \begin{equation}
+    s \leq_{\mathcal{L}} t \Leftrightarrow S^{1}s  \subseteq S^{1} t
+  \end{equation}
+  \begin{equation}
+    s \leq_{\mathcal{J}} t \Leftrightarrow S^{1}s S^{1}  \subseteq S^{1} t S^{1}
+  \end{equation}
+  \begin{equation}
+    s \leq_{\mathcal{H}} t \Leftrightarrow s \leq_{\mathcal{R}} t \quad{}\text{и}\quad{} s \leq_{\mathcal{L}} t
+  \end{equation}
+  где $sS^{1}$ --- правый идеал, порожденный элементом $s$ (т.е. минимальный
+  идеал, содержащий $s$).
+\end{Definition}
+
+Таблица трансформаций задает действие буквы на элементы множества $M$ (слова).
+То есть эта таблица задает соответствие между буквами и трансформациями
+множества $M$.
+
+Множество элементов моноида трансформаций можно построить с помощью замыкания по
+операции композиции и представить в виде графа Кэли, где вершины соответствуют
+трансформациям, а ребра соединяют вершины, если конечная вершина ребра может
+быть получена с помощью композиции транформаций соответствующих начальной
+вершины ребра и букве, которой помечают ребро.
+
+При построении левого графа Кэли производится композиция транформации
+соответствущей букве и трансформации соответствующей вершине, а в правом графе
+Кэли наоборот: вершина к букве.
+
+\begin{Example}\label{example:simple}
+  Для $M = \{x, y, z\}$, и таблицы трансформаций:
+
+  \begin{table}[htb]
+    \centering\begin{tabular}{c|ccc}
+      & a & b & c \\
+      \hline
+      x & x & z & z \\
+      y & y & y & z \\
+      z & x & x & z
+    \end{tabular}
+  \end{table}
+
+  Правый граф Кэли представлен на рисунке~\ref{fig:example1}, левый граф Кэли
+procedure  представлен на рисунке~\ref{fig:example_left}.
+
+  \begin{figure}[!htb]
+    \centering
+    \begin{minipage}[t]{\textwidth}
+      \centering
+      \include{example_graph.tex}
+    \end{minipage}
+    \caption{Правый граф Кэли для примера~\ref{example:simple}.}
+    \label{fig:example1}
+  \end{figure}
+
+  \begin{figure}[!htb]
+    \centering
+    \begin{minipage}[t]{\textwidth}
+      \centering
+      \include{example_left_graph.tex}
+    \end{minipage}
+    \caption{Левый граф Кэли для примера~\ref{example:simple}.}
+    \label{fig:example_left}
+  \end{figure}
+\end{Example}
+
+% NOTE: можно добавить псевдокод алгоритма нахождения элементов
+
+Так как в моноиде все элементы образуются с помощью композиции образующих, из
+определения идеала следует, что применение буквенной трансформации к элементу
+идеала должно давать в результате также элемент идеала. В терминологии графов
+Кэли это означает, что из вершин левого идеала в левом графе Кэли не должно быть
+ребер в вершины не принадлежащие искомому идеалу. Для вершин из правого идеала
+должно выполняться аналогичное условие в правом графе Кэли.
+
+Таким образом, идеалами являются сочетания компонент связности графа Кэли, из
+вершин которых нет исходящих ребер. То есть для любой компоненты связности из
+идеала верно, что все достижимые из нее компоненты также принадлежат идеалу.
+
+Интересно, что отношения Грина связаны с графами Кэли: $\mathcal{R}$-классы
+соответствуют компонентам связности в правом графе Кэли, а $\mathcal{L}$-классы
+--- в левом~\cite{mathfoundations2025}.
+
+Для построения множества идеалов необходимо найти конденсацию графа. Это
+делается с помощью двух запусков обхода в глубину~\refAlgo{lst:condensation}~\cite{sccs}.
+
+Построенный граф конденсации является направленным и
+ацикличным~\refImage{fig:condensation}. В таком графе нужно найти все сочетания
+компонент связности, для которых выполняется условие, что для каждой компоненты
+сильной связности в сочетание входят все достижимые из нее компоненты. Множества
+вершин для каждого сочетания образуют множество искомых идеалов соответствующего
+моноида трансформаций.
+
+\begin{figure}[!htb]
+  \centering
+  \begin{minipage}[t]{\textwidth}
+    \centering
+    \include{condensation.tex}
+  \end{minipage}
+  \caption{Граф конденсации для правого графа Кэли.}
+  \label{fig:condensation}
+\end{figure}
+
+Такие сочетания можно найти пронумеровав вершины графа конденсации и рекурсивно
+сгенерировав все сочетания этих вершин от одного до $n = |G|$
+элементов~\cite{combobjects}. Причем, нужно исключить сочетания, в которых есть
+пара вершин, такая, что одна достижима из другой. После этого для каждого
+сочетания находим все достижимые из его элементов вершины, в резльтате получая
+идеалы. Алгоритм нахождения левых (правых) идеалов по графу конденсации
+представлен на листинге~\ref{lst:ideals}.
+
+\begin{listing}[!htb]
+\caption{Алгоритм нахождения идеалов по графу конденсации.}
+\label{lst:ideals}
+\begin{algorithmic}[1]
+
+\State global Condensation(V, E)
+
+\Procedure{Ideals}{Condensation(V, E)}
+    \State $\text{prefix} \gets \{\}$
+    \State $\text{ideals} \gets \{\}$
+
+    \State $\text{Generate(prefix, ideals)}$
+    \State \Return $\text{ideals}$
+\EndProcedure
+
+\Function{Generate}{prefix, ideals}
+    \State $\text{components} \gets \text{(descendants of vertices in prefix)}$
+    \State $\text{ideal} \gets \{\text{vertices of component}\quad{} | \quad{} \text{for component} \in \text{components}\}$
+    \State $\text{ideals} \gets \text{ideal}$
+    \If{$|\text{prefix}| = |V|$}
+      \State \Return
+    \EndIf
+    \State $\text{from} \gets |\text{prefix}|$
+    \For{$i \in [\text{from}, |\text{V}|]$}
+        \State $\text{prefix.append(i)}$
+        \State $\text{Generate(prefix, ideals)}$
+        \State $\text{prefix.pop()}$
+    \EndFor
+\EndFunction
+\end{algorithmic}
+\end{listing}
+
+После получения множеств левых и правых идеалов, двусторонние идеалы находятся
+тривиальным пересечением множеств.
+
+\newpage
+\section{Реализация}
+
+Для реализации был выбран язык программирования C++, ввиду удобства его
+стандартной библиотеки для написания алгоритмов. Использован современный
+стандарт C++23, что позволило пользоваться библиотекой ranges для более
+декларативного кода.
+
+Вершина графа хранится как структура, состоящая из слова, трансформации и списка
+смежности~\refAlgo{lst:monoid_models}. Трансформация хранится как индексы
+элементов множества $M$.
+
+\begin{listing}[!htb]
+\caption{Объявление типов для хранения графа Кэли.}
+\label{lst:monoid_models}
+  \begin{minted}[style=bw, breaklines, frame=single, fontsize = \small, linenos=false, xleftmargin = 1.5em]{cpp}
+using Word = std::string;
+using Transformation = std::vector<size_t>;
+using LetterToTransformation = std::map<char, Transformation>;
+using ElementIndex = size_t;
+struct MonoidElement {
+  std::string word;
+  Transformation transformation;
+  std::vector<ElementIndex> transitions;
+
+  bool operator<=>(const MonoidElement& other) const = default;
+};
+using CayleyGraph = std::vector<MonoidElement>;
+  \end{minted}
+\end{listing}
+
+За построение графов Кэли отвечает класс
+\verb|CayleyGraphBuilder|~\refAlgo{lst:graph_builder}. Данный класс строит
+вершины графа с помощью замыкания по операции композиции. Для построения левого
+или правого графа Кэли предусмотрена передача в конструктор стратегий композиции
+и именования вершин, реализованная с помощью \verb|std::function|. Использование
+такого паттерна является примером использования семантики значений в языке C++,
+что делает код проще и снижает вероятность ошибок.
+
+\begin{listing}[!htb]
+\caption{Объявление класса для построения графов Кэли.}
+\label{lst:graph_builder}
+  \begin{minted}[style=bw, breaklines, frame=single, fontsize = \small, linenos=false, xleftmargin = 1.5em]{cpp}
+using CompositionStrategy
+    = std::function<Transformation(const Transformation& lhs, const Transformation& rhs)>;
+using WordCompositionStrategy
+    = std::function<std::string(const MonoidElement& lhs, const MonoidElement& rhs)>;
+
+class CayleyGraphBuilder {
+public:
+  CayleyGraphBuilder(const LetterToTransformation& letter_transformations,
+                     CompositionStrategy composition_strategy = RightComposition,
+                     WordCompositionStrategy word_composition_strategy = RightWordComposition);
+  CayleyGraph Build();
+private:
+  void AddComposition(size_t element_index, size_t letter_index);
+private:
+  CayleyGraph monoid_elements_;
+  std::map<Transformation, size_t> monoid_transformations_;
+  CompositionStrategy composition_strategy_;
+  WordCompositionStrategy word_composition_strategy_;
+};
+  \end{minted}
+\end{listing}
+
+Из реализации построения графа конденсации в отдельный класс выделен алгоритм
+топологической сортировки. За нахождение множеств идеалов ответственнен класс
+\verb|IdealsBuilder|~\refAlgo{lst:ideals_builder_impl}. Он строит левые или
+правые идеалы в зависимости от того, какой граф Кэли был передан в конструктор.
+Перебор комбинаторных объектов реализован с помощью рекурсии, а нахождение
+множества достижимых из вектора вершин с помощью поиска в ширину.
+
+\begin{listing}[!htb]
+\caption{Объявление класса для построения левых или правых идеалов.}
+\label{lst:ideals_builder_impl}
+  \begin{minted}[style=bw, breaklines, frame=single, fontsize = \small, linenos=false, xleftmargin = 1.5em]{cpp}
+class IdealsBuilder {
+public:
+  IdealsBuilder(CayleyGraph monoid, CondensationGraph graph);
+  std::vector<std::vector<ElementIndex>> Build();
+private:
+  std::vector<size_t> GetDescentants(std::vector<size_t> vertices);
+  void Generate(std::vector<size_t>& prefix, std::vector<std::vector<ElementIndex>>& ideals);
+private:
+  CayleyGraph monoid_;
+  CondensationGraph graph_;
+  StronglyConnectedComponents scc_;
+};
+  \end{minted}
+\end{listing}
+
+Ввод производится из стандартного потока, но легко поддержать ввод из файла или
+строки. Вывод также производится в стандартный поток, а также функцией
+\verb|VisualizeDot| записываются файлы c кодом на \verb|dot|, которые содержат
+визуализацию левого и правого графов Кэли, что удобно для проверки.
+
+\newpage
+\section{Отладка и тестирование}
+
+Модульные тесты реализованы с использованием библиотеки Google Tests.
+
+Покрытие включает визуализацию, все алгоритмы и ввод.
+
+Пример теста, который проверяет построение правого графа Кэли приведен на
+листинге~\ref{lst:test_build}. В данном тесте определяется таблица, задающая
+трансформации соответствующие буквам. Затем строится правый граф Кэли. После
+проверяется количество вершин в графе и трансформации, соответствующие
+добавленным вершинам.
+
+\begin{listing}[!htb]
+\caption{Тест, проверяющий построение правого графа Кэли.}
+\label{lst:test_build}
+  \begin{minted}[style=bw, breaklines, frame=single, fontsize = \small, linenos=false, xleftmargin = 1.5em]{cpp}
+TEST(MonoidBuilderTest, FindsClosureByTransformationComposition) {
+  LetterToTransformation letter_transformations{
+      {'a', {0, 1, 0}},
+      {'b', {2, 1, 0}},
+      {'c', {2, 2, 2}},
+  };
+  CayleyGraphBuilder builder(std::move(letter_transformations));
+
+  auto got = builder.Build();
+
+  ASSERT_THAT(got.size(), Eq(6));
+  ASSERT_THAT(got[3].transformation, Eq(Transformation{2, 1, 2}));
+  ASSERT_THAT(got[4].transformation, Eq(Transformation{0, 1, 2}));
+  ASSERT_THAT(got[5].transformation, Eq(Transformation{0, 0, 0}));
+}
+  \end{minted}
+\end{listing}
+
+Пример теста, который проверяет построение множество правых идеалов приведен на
+листинге~\ref{lst:test_ideals}. В этом тесте также сначала определяется таблица
+трансформаций. Затем строится правый граф Кэли и производится его конденсация.
+Затем по графу Кэли и графу конденсации находится множество правых идеалов и
+сравнивается с ожидаемым.
+
+\begin{listing}[!htb]
+\caption{Тест, проверяющий построение множества правых идеалов.}
+\label{lst:test_ideals}
+  \begin{minted}[style=bw, breaklines, frame=single, fontsize = \small, linenos=false, xleftmargin = 1.5em]{cpp}
+TEST(StrongConnectivityTest, FindRightIdeals) {
+  LetterToTransformation letter_transformations{
+      {'a', {0, 1, 0}},
+      {'b', {2, 1, 0}},
+      {'c', {2, 2, 2}},
+  };
+  auto monoid = CayleyGraphBuilder(letter_transformations).Build();
+  auto condensation_graph = CondensationGraphBuilder(monoid).Build();
+
+  auto right_ideals = IdealsBuilder(monoid, condensation_graph).Build();
+
+  ASSERT_THAT(IndicesToWords(monoid, right_ideals),
+              Eq(std::vector<std::vector<std::string>>{
+                  {"a", "b", "c", "ab", "bb", "ca"}, {"a", "c", "ab", "ca"}, {"c", "ca"}}));
+}
+  \end{minted}
+\end{listing}
+
+\newpage
+\anonsection{ЗАКЛЮЧЕНИЕ}
+
+В результате работы получена реализация алгоритмов на стыке алгебры и дискретной
+математики. Цели практики достигнуты: программа протестирована модульными
+тестами и соответствует заданию.
+
+Выполняя данную работу, я подтянул знания алгебры и узнал о ее связи с
+дискретной математикой, используя книгу <<Mathematical foundations of Automata
+Theory>>~\cite{mathfoundations2025}. Также мне выпала приятная возможность
+применить на практике фундаментальные алгоритмы из области генерации
+комбинаторных объектов и теории графов.
+
+\renewcommand\refname{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+% Список литературы
+\clearpage
+
+%\bibliographystyle{ugost2008s}  %utf8gost71u.bst} %utf8gost705u} %gost2008s}
+{\catcode`"\active\def"{\relax}
+\addcontentsline{toc}{section}{\protect\numberline{}\refname}%
+%\bibliography{biblio} %здесь ничего не меняем, кроме, возможно, имени bib-файла
+\printbibliography
+}
+
+\newpage
+\settocdepth{section}
+\anonsection{ПРИЛОЖЕНИЕ А}
+
+\vspace{-30pt}
+
+\begin{listing}[H]
+\caption{Построение графа конденсации.}
+\label{lst:condensation}
+\begin{algorithmic}[1]
+\Procedure{Condensation}{$G(V, E)$}
+    \State $\text{used} \gets \text{false}\quad{} \forall v \in V$
+    \State $\text{order} \gets \{\}$
+
+    \For{$v \in V$}
+        \If{$\text{used}[v] = \text{false}$}
+            \State $\text{DFS1}(v)$
+        \EndIf
+    \EndFor
+
+    \State $G^T \gets \text{Transposed(G)}$
+    \State $\text{used} \gets \text{false}\quad{} \forall v \in V$
+    \State $\text{components} \gets \{\}$
+
+    \For{$v \in \text{Reversed(order)}$}
+        \If{$\text{used}[v] = \text{false}$}
+            \State $\text{comp} \gets \{\}$
+            \State $\text{DFS2}(v, \text{comp})$
+            \State $\text{components} \gets \text{comp}$
+        \EndIf
+    \EndFor
+
+    \State $C \gets (\{\}, \{\})$
+    \For{$c_i \in \text{components}$}
+        \State $C.V \gets c_{i}$
+    \EndFor
+    \For{$(u, v) \in E$}
+        \State $c_u \gets$ Component with $u$
+        \State $c_v \gets$ Component with $v$
+        \If{$c_u \neq c_v$}
+            \State $C.E \gets (c_u, c_v)$
+        \EndIf
+    \EndFor
+    \State \Return $C$
+\EndProcedure
+
+\Function{DFS1}{$v$}
+    \State $\text{used}[v] \gets \text{true}$
+    \For{$u \in G.adj[v]$}
+        \If{$\text{used}[u] = \text{false}$}
+            \State $\text{DFS1}(u)$
+        \EndIf
+    \EndFor
+    \State $\text{order} \gets v$
+\EndFunction
+
+\Function{DFS2}{$v$, $\text{comp}$}
+    \State $\text{used}[v] \gets \text{true}$
+    \State $\text{comp} \gets v$
+    \For{$u \in G^T.adj[v]$}
+        \If{$\text{used}[u] = \text{false}$}
+            \State $\text{DFS2}(u, \text{comp})$
+        \EndIf
+    \EndFor
+\EndFunction
+\end{algorithmic}
+\end{listing}
+
+\end{document}
