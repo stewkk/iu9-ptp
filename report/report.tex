@@ -190,7 +190,7 @@
     s \leq_{\mathcal{J}} t \Leftrightarrow \exists u, v \in S^{1} : s = utv
   \end{equation}
   \begin{equation}
-    s \leq_{\mathcal{H}} t \Leftrightarrow s \leq_{\mathcal{R}} t \quad{}\text{and}\quad{} s \leq_{\mathcal{L}} t
+    s \leq_{\mathcal{H}} t \Leftrightarrow s \leq_{\mathcal{R}} t \quad{}\text{и}\quad{} s \leq_{\mathcal{L}} t
   \end{equation}
   Через идеалы:
   \begin{equation}
@@ -203,7 +203,7 @@
     s \leq_{\mathcal{J}} t \Leftrightarrow S^{1}s S^{1}  \subseteq S^{1} t S^{1}
   \end{equation}
   \begin{equation}
-    s \leq_{\mathcal{H}} t \Leftrightarrow s \leq_{\mathcal{R}} t \quad{}\text{and}\quad{} s \leq_{\mathcal{L}} t
+    s \leq_{\mathcal{H}} t \Leftrightarrow s \leq_{\mathcal{R}} t \quad{}\text{и}\quad{} s \leq_{\mathcal{L}} t
   \end{equation}
   где $sS^{1}$ --- правый идеал, порожденный элементом $s$ (т.е. минимальный
   идеал, содержащий $s$).
@@ -293,7 +293,7 @@ procedure  представлен на рисунке~\ref{fig:example_left}.
     \centering
     \include{condensation.tex}
   \end{minipage}
-  \caption{Граф конденсации для примера~\ref{example:simple}.}
+  \caption{Граф конденсации для правого графа Кэли.}
   \label{fig:condensation}
 \end{figure}
 
@@ -309,6 +309,9 @@ procedure  представлен на рисунке~\ref{fig:example_left}.
 \caption{Алгоритм нахождения идеалов по графу конденсации.}
 \label{lst:ideals}
 \begin{algorithmic}[1]
+
+\State global Condensation(V, E)
+
 \Procedure{Ideals}{Condensation(V, E)}
     \State $\text{prefix} \gets \{\}$
     \State $\text{ideals} \gets \{\}$

@@ -8,8 +8,8 @@ build:
 	cmake --build build -- -j 6
 
 dot:
-	dot -T png -O /tmp/out4.dot
-	loupe /tmp/out4.dot.png
+	dot -T png -O /tmp/out3.dot
+	loupe /tmp/out3.dot.png
 
 report:
 	cd report && latexmk -pdfxe report.tex

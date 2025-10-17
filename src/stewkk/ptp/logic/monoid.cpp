@@ -62,6 +62,28 @@ CayleyGraph CayleyGraphBuilder::Build() {
     }
   }
 
+  auto transformation_size = monoid_elements_.front().transformation.size();
+  Transformation id(transformation_size);
+  for (size_t i = 0; i < transformation_size; i++) {
+    id[i] = i;
+  }
+
+  bool has_id_transformation = false;
+  for (size_t i = 0; i < letters_count; i++) {
+    if (monoid_elements_[i].transformation == id) {
+      has_id_transformation = true;
+    }
+  }
+
+  if (!has_id_transformation) {
+    std::vector<ElementIndex> id_transitions(letters_count);
+    for (size_t i = 0; i < letters_count; i++) {
+      id_transitions[i] = i;
+    }
+
+    monoid_elements_.push_back(MonoidElement{std::string{"id"}, id, id_transitions});
+  }
+
   return std::move(monoid_elements_);
 }
 

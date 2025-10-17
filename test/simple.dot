@@ -5,6 +5,7 @@ digraph G {
 "ab"
 "bb"
 "ca"
+"id"
 "a" -> "a" [label="a"]
 "a" -> "ab" [label="b"]
 "a" -> "c" [label="c"]
@@ -23,4 +24,7 @@ digraph G {
 "ca" -> "ca" [label="a"]
 "ca" -> "c" [label="b"]
 "ca" -> "c" [label="c"]
+"id" -> "a" [label="a"]
+"id" -> "b" [label="b"]
+"id" -> "c" [label="c"]
 }
